@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Button,
+  Image,
 } from "react-native";
 import { Camera } from "expo-camera";
 import { FontAwesome } from "@expo/vector-icons";
@@ -13,13 +14,34 @@ import { Feather } from "@expo/vector-icons";
 // import { Feather } from "@expo/vector-icons";
 // import { Button } from "react-native-web";
 
-const CreateScreen = () => {
+const CreateScreen = ({ navigation }) => {
+  const [camera, setCamera] = useState(null);
+  const [photo, setPhoto] = useState(null);
+
+  const takePhoto = async () => {
+    const photo = await camera.takePictureAsync();
+    setPhoto(photo.uri);
+    // console.log("photo", photo);
+  };
+
+  const sendPhoto = () => {
+    // console.log("navigation", navigation);
+    navigation.navigate("Posts", { photo });
+  };
+
   return (
     <View style={styles.container}>
       <View>
-        <Camera style={styles.camera}>
-          <TouchableOpacity onPress={() => {}} style={styles.snapContainer}>
-            {/* <Text style={styles.snap}>SNAP</Text> */}
+        <Camera style={styles.camera} ref={setCamera}>
+          {photo && (
+            <View style={styles.takePhotoContainer}>
+              <Image
+                source={{ uri: photo }}
+                style={{ height: 100, width: 100 }}
+              />
+            </View>
+          )}
+          <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
             <FontAwesome
               style={styles.snap}
               name="camera"
@@ -43,7 +65,7 @@ const CreateScreen = () => {
             placeholder="Местность..."
           />
         </View>
-        <TouchableOpacity activeOpacity={0.8}>
+        <TouchableOpacity onPress={sendPhoto} activeOpacity={0.8}>
           <Text style={styles.button}>Опубликовать</Text>
         </TouchableOpacity>
       </View>
@@ -74,9 +96,13 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
     borderRadius: 8,
   },
-  // snap: {
-  //   color: "#fff",
-  // },
+  takePhotoContainer: {
+    position: "absolute",
+    top: 50,
+    left: 10,
+    borderColor: "#fff",
+    borderWidth: 1,
+  },
   snapContainer: {
     borderWidth: 1,
     backgroundColor: "#f6f6f6",
