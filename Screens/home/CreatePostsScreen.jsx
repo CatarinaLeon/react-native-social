@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Button,
   Image,
 } from "react-native";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import { Camera } from "expo-camera";
+import * as Location from "expo-location";
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-// import { Feather } from "@expo/vector-icons";
-// import { Button } from "react-native-web";
 
 const CreateScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
@@ -20,13 +19,25 @@ const CreateScreen = ({ navigation }) => {
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
+    const location = await Location.getCurrentPositionAsync();
+    console.log("latitude", location.coords.latitude);
+    console.log("longitude", location.coords.longitude);
     setPhoto(photo.uri);
-    // console.log("photo", photo);
+    console.log("photo", photo);
   };
-
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      console.log("status", status);
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+    })();
+  }, []);
   const sendPhoto = () => {
-    // console.log("navigation", navigation);
-    navigation.navigate("Posts", { photo });
+    console.log("navigation", navigation);
+    navigation.navigate("HomeScreen", { photo });
   };
 
   return (
@@ -37,7 +48,12 @@ const CreateScreen = ({ navigation }) => {
             <View style={styles.takePhotoContainer}>
               <Image
                 source={{ uri: photo }}
-                style={{ height: 100, width: 100 }}
+                style={{
+                  height: 50,
+                  width: 50,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                }}
               />
             </View>
           )}

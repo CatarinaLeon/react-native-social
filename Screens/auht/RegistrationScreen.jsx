@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -9,10 +10,50 @@ import {
   Text,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Dimensions,
 } from "react-native";
+import { authSignUpUser } from "../../redux/auth/authOperations";
+
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([
+  // "exported from 'deprecated-react-native-prop-types'.",
+  "ViewPropTypes will be removed",
+  "ColorPropType will be removed",
+]);
+
+const initialState = {
+  name: "",
+  email: "",
+  password: "",
+};
 
 export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setstate] = useState(initialState);
+
+  const dispatch = useDispatch();
+
+  const [dimensions, setdimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
+
+  useEffect(() => {
+    const onChange = () => {
+      const width = Dimensions.get("window").width - 16 * 2;
+
+      setdimensions(width);
+    };
+    Dimensions.addEventListener("change", onChange);
+    return () => {
+      Dimensions.remove("change", onChange);
+    };
+  }, []);
+
+  const handleSubmit = () => {
+    // console.log(state);
+    dispatch(authSignUpUser(state));
+    setstate(initialState);
+  };
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -25,10 +66,13 @@ export default function RegistrationScreen({ navigation }) {
           source={require("../../assets/images/PhotoBG.jpg")}
         >
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View
-              style={{ ...styles.form, marginBottom: isShowKeyboard ? 0 : 0 }}
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 0 : 66,
+              }}
             >
               <View style={styles.photo}></View>
               <Text style={styles.title}>Регистрация</Text>
@@ -39,6 +83,10 @@ export default function RegistrationScreen({ navigation }) {
                   placeholder="Логин"
                   autoFocus={true}
                   onFocus={() => setIsShowKeyboard(true)}
+                  value={state.name}
+                  onChangeText={(value) =>
+                    setstate((prevState) => ({ ...prevState, name: value }))
+                  }
                 />
               </View>
               <View style={styles.formCont}>
@@ -47,6 +95,10 @@ export default function RegistrationScreen({ navigation }) {
                   textAlign={"center"}
                   placeholder="Адрес электронной почты"
                   onFocus={() => setIsShowKeyboard(true)}
+                  value={state.email}
+                  onChangeText={(value) =>
+                    setstate((prevState) => ({ ...prevState, email: value }))
+                  }
                 />
               </View>
               <View style={styles.formCont}>
@@ -55,9 +107,13 @@ export default function RegistrationScreen({ navigation }) {
                   textAlign={"center"}
                   placeholder="Пароль"
                   onFocus={() => setIsShowKeyboard(true)}
+                  value={state.password}
+                  onChangeText={(value) =>
+                    setstate((prevState) => ({ ...prevState, password: value }))
+                  }
                 />
               </View>
-              <TouchableOpacity activeOpacity={0.8} onPress={keyboardHide}>
+              <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
                 <Text style={styles.button}>Зарегистрироваться</Text>
               </TouchableOpacity>
               <View>
@@ -92,7 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    paddingBottom: 66,
+    // paddingBottom: 66,
     paddingTop: 60,
     marginBottom: 0,
   },

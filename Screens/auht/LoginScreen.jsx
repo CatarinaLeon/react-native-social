@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   View,
@@ -11,8 +12,31 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
+import { authSignInUser } from "../../redux/auth/authOperations";
+
+import { LogBox } from "react-native";
+LogBox.ignoreLogs([
+  "exported from 'deprecated-react-native-prop-types'.",
+  // "ViewPropTypes will be removed",
+  // "ColorPropType will be removed",
+]);
+
+const initialState = {
+  email: "",
+  password: "",
+};
+
 export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setstate] = useState(initialState);
+  const dispatch = useDispatch();
+
+  const handleSubmit = () => {
+    console.log("submit", state);
+    dispatch(authSignInUser(state));
+    setstate(initialState);
+  };
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -25,10 +49,13 @@ export default function LoginScreen({ navigation }) {
           source={require("../../assets/images/PhotoBG.jpg")}
         >
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View
-              style={{ ...styles.form, marginBottom: isShowKeyboard ? 0 : 0 }}
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 0 : 132,
+              }}
             >
               <Text style={styles.title}>Войти</Text>
               <View>
@@ -37,6 +64,10 @@ export default function LoginScreen({ navigation }) {
                   textAlign={"center"}
                   placeholder="Адрес электронной почты"
                   onFocus={() => setIsShowKeyboard(true)}
+                  value={state.email}
+                  onChangeText={(value) =>
+                    setstate((prevState) => ({ ...prevState, email: value }))
+                  }
                 />
               </View>
               <View style={styles.formCont}>
@@ -45,9 +76,13 @@ export default function LoginScreen({ navigation }) {
                   textAlign={"center"}
                   placeholder="Пароль"
                   onFocus={() => setIsShowKeyboard(true)}
+                  value={state.password}
+                  onChangeText={(value) =>
+                    setstate((prevState) => ({ ...prevState, password: value }))
+                  }
                 />
               </View>
-              <TouchableOpacity activeOpacity={0.8} onPress={keyboardHide}>
+              <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
                 <Text style={styles.button}>Войти</Text>
               </TouchableOpacity>
               <View>
@@ -82,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    paddingBottom: 132,
+    // paddingBottom: 132,
     paddingTop: 32,
     marginBottom: 0,
   },
