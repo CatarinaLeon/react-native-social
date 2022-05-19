@@ -14,15 +14,15 @@ import {
 } from "react-native";
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
-import { LogBox } from "react-native";
-LogBox.ignoreLogs([
-  // "exported from 'deprecated-react-native-prop-types'.",
-  "ViewPropTypes will be removed",
-  "ColorPropType will be removed",
-]);
+// import { LogBox } from "react-native";
+// LogBox.ignoreLogs([
+//   // "exported from 'deprecated-react-native-prop-types'.",
+//   "ViewPropTypes will be removed",
+//   "ColorPropType will be removed",
+// ]);
 
 const initialState = {
-  name: "",
+  nickname: "",
   email: "",
   password: "",
 };
@@ -37,17 +37,17 @@ export default function RegistrationScreen({ navigation }) {
     Dimensions.get("window").width - 16 * 2
   );
 
-  useEffect(() => {
-    const onChange = () => {
-      const width = Dimensions.get("window").width - 16 * 2;
+  // useEffect(() => {
+  //   const onChange = () => {
+  //     const width = Dimensions.get("window").width - 16 * 2;
 
-      setdimensions(width);
-    };
-    Dimensions.addEventListener("change", onChange);
-    return () => {
-      Dimensions.remove("change", onChange);
-    };
-  }, []);
+  //     setdimensions(width);
+  //   };
+  //   Dimensions.addEventListener("change", onChange);
+  //   return () => {
+  //     Dimensions.remove("change", onChange);
+  //   };
+  // }, []);
 
   const handleSubmit = () => {
     // console.log(state);
@@ -83,9 +83,9 @@ export default function RegistrationScreen({ navigation }) {
                   placeholder="Логин"
                   autoFocus={true}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={state.name}
+                  value={state.nickname}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, name: value }))
+                    setstate((prevState) => ({ ...prevState, nickname: value }))
                   }
                 />
               </View>

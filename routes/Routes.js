@@ -3,10 +3,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import RegistrationScreen from "../Screens/auht/RegistrationScreen";
-import LoginScreen from "../Screens/auht/LoginScreen.jsx";
-import PostsScreen from "../Screens/home/PostsScreen.jsx";
-import CreateScreen from "../Screens/home/CreatePostsScreen.jsx";
-import ProfileScreen from "../Screens/home/ProfileScreen.jsx";
+import LoginScreen from "../Screens/auht/LoginScreen";
+import PostsScreen from "../Screens/home/PostsScreen";
+import CreateScreen from "../Screens/home/CreatePostsScreen";
+import ProfileScreen from "../Screens/home/ProfileScreen";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -39,7 +39,7 @@ export const useRoute = (isAuth) => {
   return (
     <MainTab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <MainTab.Screen
-        options={{
+        options={{headerShown: false,
           tabBarIcon: ({ focused, size, color, backgroundColor }) => (
             <SimpleLineIcons
               name="grid"
@@ -50,6 +50,7 @@ export const useRoute = (isAuth) => {
             />
           ),
         }}
+        // options={{  }}
         name="Публикации"
         component={PostsScreen}
       />

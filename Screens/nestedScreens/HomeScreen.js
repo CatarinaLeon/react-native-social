@@ -4,17 +4,15 @@ import { Feather } from "@expo/vector-icons";
 
 const HomeScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
-  console.log("route.params", route.params);
+
+  // console.log("route.params", route);
 
   useEffect(() => {
-    try {
-      if (route.params) {
-        setPosts((prevState) => [...prevState, route.params]);
-      }
-    } catch (error) {
-      console.log(error);
+    if (route.params) {
+      setPosts((prevState) => [...prevState, route.params]);
     }
   }, [route.params]);
+  
   console.log("posts", posts);
 
   return (

@@ -5,26 +5,47 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Image,
+  Image
 } from "react-native";
 // import { TouchableOpacity } from "react-native-gesture-handler";
-import { Camera } from "expo-camera";
+import { Camera  } from "expo-camera";
 import * as Location from "expo-location";
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+
+import { getStorage, ref } from "firebase/storage";
+import app from "../../firebase/config";
+const storage = getStorage(app);
 
 const CreateScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
 
   const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync();
-    console.log("latitude", location.coords.latitude);
-    console.log("longitude", location.coords.longitude);
-    setPhoto(photo.uri);
-    console.log("photo", photo);
+    // if (camera) {
+      // let file = await camera.takePictureAsync()
+      console.log('camera.takePictureAsync()----->',camera.takePictureAsync())
+      // setPhoto(file.uri)
+
+    // }
+
+  }
+    
+
+  const uploadPhotoToServer = async () => {
+      const response = await fetch(photo);
+      const file = await response.blob();
+      const uniquePostId = Date.now().toString();
+      const data = await ref(storage, `postImage/${uniquePostId}`).put(file);
+      console.log("data", data);
   };
+
+  const sendPhoto = () => {
+    // uploadPhotoToServer();
+    // console.log(' navigation.navigate',  navigation)
+    navigation.navigate("HomeScreen",  { photo });
+  };
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -35,25 +56,16 @@ const CreateScreen = ({ navigation }) => {
       }
     })();
   }, []);
-  const sendPhoto = () => {
-    console.log("navigation", navigation);
-    navigation.navigate("HomeScreen", { photo });
-  };
 
   return (
     <View style={styles.container}>
       <View>
-        <Camera style={styles.camera} ref={setCamera}>
+        <Camera style={styles.camera} ref={(ref)=>setCamera(ref)}>
           {photo && (
             <View style={styles.takePhotoContainer}>
               <Image
                 source={{ uri: photo }}
-                style={{
-                  height: 50,
-                  width: 50,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                }}
+                style={{ height: 80, width: 100 }}
               />
             </View>
           )}
@@ -72,12 +84,10 @@ const CreateScreen = ({ navigation }) => {
         <View style={styles.formContainer}>
           <TextInput
             style={styles.input}
-            textAlign={"center"}
             placeholder="Название..."
           />
           <TextInput
             style={{ ...styles.input, marginTop: 32 }}
-            textAlign={"center"}
             placeholder="Местность..."
           />
         </View>
@@ -114,10 +124,12 @@ const styles = StyleSheet.create({
   },
   takePhotoContainer: {
     position: "absolute",
-    top: 50,
-    left: 10,
-    borderColor: "#fff",
+    top: 0,
+    left: 0,
+    borderColor: "red",
     borderWidth: 1,
+    height: 80,
+    width: 100,
   },
   snapContainer: {
     borderWidth: 1,
@@ -181,5 +193,22 @@ const styles = StyleSheet.create({
     marginRight: "auto",
   },
 });
+
+// // Create a reference with an initial file path and name
+// // Создайте ссылку с исходным путем и именем файла
+// 
+
+    // try {
+    // const { uri } = await camera.takePictureAsync();
+
+    // console.log("camera", uri);
+    // const location = await Location.getCurrentPositionAsync();
+    // console.log("latitude", location.coords.latitude);
+    // console.log("longitude", location.coords.longitude);
+    // setPhoto(uri);
+    // console.log("photoUri", uri);
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
 export default CreateScreen;

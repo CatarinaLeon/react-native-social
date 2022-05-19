@@ -14,12 +14,12 @@ import {
 
 import { authSignInUser } from "../../redux/auth/authOperations";
 
-import { LogBox } from "react-native";
-LogBox.ignoreLogs([
-  "exported from 'deprecated-react-native-prop-types'.",
-  // "ViewPropTypes will be removed",
-  // "ColorPropType will be removed",
-]);
+// import { LogBox } from "react-native";
+// LogBox.ignoreLogs([
+//   "exported from 'deprecated-react-native-prop-types'.",
+//   // "ViewPropTypes will be removed",
+//   // "ColorPropType will be removed",
+// ]);
 
 const initialState = {
   email: "",
