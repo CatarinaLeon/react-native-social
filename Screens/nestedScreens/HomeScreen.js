@@ -1,24 +1,49 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { Feather } from "@expo/vector-icons";
+import { collection, getDocs,onSnapshot,doc   } from "firebase/firestore"; 
+import {db} from "../../firebase/config";
 
 const HomeScreen = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
+console.log('setPosts', posts)
+    const getAllPost = async () => {
+      const data = await getDocs(collection(db, 'posts'))
+      // console.log('data', data)
+ setPosts(
+        data.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        })
+      );
 
-  // console.log("route.params", route);
+      // data.forEach((doc) => {
+      //   console.log('doc', doc)
+      //   setPosts(`${doc.id} => ${doc.data()}`)
+      // })
+
+      // onSnapshot((data) =>
+      //  setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      // );
+      // console.log('setPosts', setPosts)
+};
+      // db
+      // .firestore()
+      // .collection("posts")
+      // .onSnapshot((data) =>
+      //   setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      // );
+  // };
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    getAllPost()
+    // console.log('getAllPost', getAllPost())
+  }, []);
   
-  console.log("posts", posts);
 
   return (
     <View style={styles.container}>
       <View style={styles.containerImage}>
-        <Image style={styles.image} />
+        {/* <Image style={styles.image} /> */}
         <View>
           <Text style={styles.imageText}>Natali Romanova</Text>
           <Text
@@ -38,21 +63,21 @@ const HomeScreen = ({ route, navigation }) => {
         keyExtractor={(item, indx) => indx.toString()}
         renderItem={({ item }) => (
           <View style={styles.containerList}>
-            <Image style={styles.imageList} source={{ uri: item.photo }} />
-            <Text style={styles.textList}>Лес</Text>
+            <Image style={styles.imageList} source={{ uri: item.photo.localUri }} />
+            <Text style={styles.textList}>{item.comment}</Text>
             <View style={styles.containerWrap}>
               <Text
                 style={styles.wrapText}
-                onPress={() => navigation.navigate("Комментарии")}
+                onPress={() => navigation.navigate("Комментарии",{comment:item.comment})}
               >
                 <Feather name="message-circle" size={18} color="#BDBDBD" /> 1
               </Text>
               <Text
                 style={styles.wrapText}
-                onPress={() => navigation.navigate("Карта")}
+                onPress={() => navigation.navigate("Карта",{ location: item.location.coords })}
               >
                 <Feather name="map-pin" size={18} color="#BDBDBD" />{" "}
-                Ivano-Frankivs'k Region, Ukraine
+                {/* { item.location.coords } */}
               </Text>
             </View>
           </View>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -8,68 +9,144 @@ import {
   Image
 } from "react-native";
 // import { TouchableOpacity } from "react-native-gesture-handler";
-import { Camera  } from "expo-camera";
+import { Camera, CameraType } from "expo-camera";
+import * as ImagePicker from 'expo-image-picker';
 import * as Location from "expo-location";
-import { FontAwesome } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore"; 
+import {storage, db} from "../../firebase/config";
 
-import { getStorage, ref } from "firebase/storage";
-import app from "../../firebase/config";
-const storage = getStorage(app);
 
 const CreateScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
+  // console.log('photo=============', photo)
+ const [comment, setComment] = useState("");
+  const [location, setLocation] = useState(null);
+  // console.log('comment', comment)
+  // console.log('location', location)
 
-  const takePhoto = async () => {
-    // if (camera) {
-      // let file = await camera.takePictureAsync()
-      console.log('camera.takePictureAsync()----->',camera.takePictureAsync())
-      // setPhoto(file.uri)
+  const { userId, nickName } = useSelector((state) => state.auth);
 
-    // }
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(CameraType.back);
 
-  }
+  const openImagePickerAsync = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Требуется разрешение на доступ к фотопленке!");
+      return;
+    }
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
+    // console.log("pickerResult---->", pickerResult);
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setPhoto({ localUri: pickerResult.uri });
     
+  }
+  //   if (photo !== null) {
+  //   return (
+  //     <View style={styles.containerPhoto}>
+  //       <Image
+  //         source={{ uri: photo.localUri }}
+  //         style={styles.thumbnail}
+  //       />
+  //     </View>
+  //   );
+  // }
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await Camera.getCameraPermissionsAsync();
+  //     setHasPermission(status === 'granted');
+  //     console.log('status', status)
+  //   })();
+  // }, []);
+
+  // if (hasPermission === null) {
+  //   return <View />;
+  // }
+  // if (hasPermission === false) {
+  //   return <Text>Нет доступа к камере</Text>;
+  // }
+
+  // const takePhoto = async () => {
+  //   // const { uri } = await FileSystem.getInfoAsync()
+  //   console.log('uri', FileSystem.readAsStringAsync())
+  //   // const { uri } = await camera.takePictureAsync();
+  //   // const location = await Location.getCurrentPositionAsync();
+  //     // console.log('Camera.takePictureAsync()----->',camera.takePictureAsync())
+  //   // setPhoto(uri)
+  // }
+
+  
+  // Створення колекції Post
+    const uploadPostToServer = async () => {
+    const photo =await uploadPhotoToServer();
+    const createPost = await addDoc(collection(db, 'posts'), {
+      photo: photo,
+      comment: comment,
+      location: location,
+      userId: userId,
+      nickName: nickName,
+    }) 
+    console.log('createPost', createPost)
+  };
 
   const uploadPhotoToServer = async () => {
-      const response = await fetch(photo);
-      const file = await response.blob();
-      const uniquePostId = Date.now().toString();
-      const data = await ref(storage, `postImage/${uniquePostId}`).put(file);
-      console.log("data", data);
+    const response = await fetch(photo.localUri);
+    // console.log('response=>', response)
+    const file = await response.blob();
+    // console.log('file=>', file)
+    // const uniquePostId = Date.now().toString();
+    const storageRef = await ref(storage, 'postImage/'+ file.data.name)
+    // console.log('storageRef', storageRef)
+    const uploadTask = await uploadBytesResumable(storageRef, file);
+    console.log("uploadTask", uploadTask);
+    const processedPhoto = await getDownloadURL(storageRef)
+    console.log('processedPhoto', processedPhoto)
+    return processedPhoto;
   };
+
 
   const sendPhoto = () => {
-    // uploadPhotoToServer();
+    uploadPostToServer();
+    console.log('uploadPostToServer', uploadPostToServer())
     // console.log(' navigation.navigate',  navigation)
-    navigation.navigate("HomeScreen",  { photo });
+    navigation.navigate("HomeScreen");
   };
 
-  useEffect(() => {
+    useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      console.log("status", status);
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+        console.log("Разрешение на доступ к местоположению было отклонено");
       }
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
     })();
   }, []);
 
   return (
     <View style={styles.container}>
       <View>
-        <Camera style={styles.camera} ref={(ref)=>setCamera(ref)}>
+        <Camera style={styles.camera} ref={setCamera}
+        type={type}
+        >
           {photo && (
             <View style={styles.takePhotoContainer}>
               <Image
-                source={{ uri: photo }}
-                style={{ height: 80, width: 100 }}
+                source={{ uri: photo.localUri }}
+                style={{ height: 200, width: 150 }}
               />
             </View>
           )}
-          <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
+          <TouchableOpacity
+            // onPress={takePhoto}
+            style={styles.snapContainer}
+          >
             <FontAwesome
               style={styles.snap}
               name="camera"
@@ -77,18 +154,36 @@ const CreateScreen = ({ navigation }) => {
               color="#BDBDBD"
             />
           </TouchableOpacity>
+          <TouchableOpacity
+              onPress={() => {
+                setType(
+                  type === Camera.Constants.Type.back
+                    ? Camera.Constants.Type.front
+                    : Camera.Constants.Type.back
+                );
+              }}
+            >
+              <MaterialCommunityIcons
+                // style={s.snap}
+                name="camera-retake-outline"
+                size={34}
+                color="#f57b0b"
+              />
+            </TouchableOpacity>
         </Camera>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={openImagePickerAsync}>
           <Text style={styles.photo}>Загрузите фото</Text>
         </TouchableOpacity>
         <View style={styles.formContainer}>
           <TextInput
             style={styles.input}
             placeholder="Название..."
+            onChangeText={setComment}
           />
           <TextInput
             style={{ ...styles.input, marginTop: 32 }}
             placeholder="Местность..."
+            onChangeText={setLocation}
           />
         </View>
         <TouchableOpacity onPress={sendPhoto} activeOpacity={0.8}>
@@ -111,6 +206,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     // alignItems: "center",
   },
+  containerPhoto: {
+    height:300,
+  },
+    thumbnail: {
+    width: 300,
+    height: 300,
+    resizeMode: "contain"
+  },
   camera: {
     height: 240,
     marginHorizontal: 16,
@@ -128,8 +231,8 @@ const styles = StyleSheet.create({
     left: 0,
     borderColor: "red",
     borderWidth: 1,
-    height: 80,
-    width: 100,
+    height: 200,
+    width: 150,
   },
   snapContainer: {
     borderWidth: 1,
@@ -194,21 +297,5 @@ const styles = StyleSheet.create({
   },
 });
 
-// // Create a reference with an initial file path and name
-// // Создайте ссылку с исходным путем и именем файла
-// 
-
-    // try {
-    // const { uri } = await camera.takePictureAsync();
-
-    // console.log("camera", uri);
-    // const location = await Location.getCurrentPositionAsync();
-    // console.log("latitude", location.coords.latitude);
-    // console.log("longitude", location.coords.longitude);
-    // setPhoto(uri);
-    // console.log("photoUri", uri);
-    // } catch (error) {
-    //   console.log(error);
-    // }
 
 export default CreateScreen;

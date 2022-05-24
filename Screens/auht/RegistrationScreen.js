@@ -22,7 +22,7 @@ import { authSignUpUser } from "../../redux/auth/authOperations";
 // ]);
 
 const initialState = {
-  nickname: "",
+  nickName: "",
   email: "",
   password: "",
 };
@@ -83,9 +83,9 @@ export default function RegistrationScreen({ navigation }) {
                   placeholder="Логин"
                   autoFocus={true}
                   onFocus={() => setIsShowKeyboard(true)}
-                  value={state.nickname}
+                  value={state.nickName}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, nickname: value }))
+                    setstate((prevState) => ({ ...prevState, nickName: value }))
                   }
                 />
               </View>

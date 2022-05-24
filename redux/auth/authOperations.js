@@ -1,26 +1,31 @@
-import { getAuth,createUserWithEmailAndPassword, signInWithEmailAndPassword,onAuthStateChanged,signOut,currentUser } from "firebase/auth";
-import app from '../../firebase/config'
+import {createUserWithEmailAndPassword, signInWithEmailAndPassword,onAuthStateChanged,signOut,currentUser,updateProfile } from "firebase/auth";
+import {auth} from '../../firebase/config'
 import { authSlice } from "./authReducer";
 
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
-const auth = getAuth(app)
+// const auth = getAuth(app)
 
 // Реєстрація користувача
-export const authSignUpUser = ({email, password, nickname }) => async (dispatch, getSatte) => { 
+export const authSignUpUser = ({email, password, nickName,userId }) => async (dispatch, getSatte) => { 
     try {
-        await createUserWithEmailAndPassword(auth, email, password)
-        const user = await currentUser(auth);
-        await user.updateProfile({
-        displayName: nickname,
+        const data = await createUserWithEmailAndPassword(auth, email, password)
+        // console.log('data', data)
+        // const user = await ;
+        // console.log('user', user)
+        await updateProfile(auth.currentUser,{
+            displayName: nickName,
+            // uid: userId,
         });
-        const { displayName, uid } = await currentUser(auth);
+        // console.log('user', user)
+        const upload = await auth.currentUser;
+        // console.log('upload', upload)
         const userUpdateProfile = {
-        nickName: displayName,
-        userId: uid,
+        nickName: upload.displayName,
+        userId: upload.uid,
     };
         dispatch(updateUserProfile(userUpdateProfile));
-        console.log('user', user)
+        // console.log('user', user)
     } catch (error) {
         console.log("error", error);
         console.log('error.message',error.message)
