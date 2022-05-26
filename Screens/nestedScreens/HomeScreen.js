@@ -1,92 +1,72 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { collection, getDocs,onSnapshot,doc   } from "firebase/firestore"; 
+import { collection, getDocs } from "firebase/firestore"; 
 import {db} from "../../firebase/config";
+import { Feather } from "@expo/vector-icons";
 
-const HomeScreen = ({ route, navigation }) => {
+const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-console.log('setPosts', posts)
-    const getAllPost = async () => {
-      const data = await getDocs(collection(db, 'posts'))
-      // console.log('data', data)
- setPosts(
-        data.docs.map((doc) => {
-          return { ...doc.data(), id: doc.id };
-        })
-      );
-
-      // data.forEach((doc) => {
-      //   console.log('doc', doc)
-      //   setPosts(`${doc.id} => ${doc.data()}`)
-      // })
-
-      // onSnapshot((data) =>
-      //  setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      // );
-      // console.log('setPosts', setPosts)
-};
-      // db
-      // .firestore()
-      // .collection("posts")
-      // .onSnapshot((data) =>
-      //   setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      // );
-  // };
-
-  useEffect(() => {
-    getAllPost()
-    // console.log('getAllPost', getAllPost())
-  }, []);
+  console.log('setPosts', posts)
   
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.containerImage}>
-        {/* <Image style={styles.image} /> */}
-        <View>
-          <Text style={styles.imageText}>Natali Romanova</Text>
-          <Text
-            style={{
-              ...styles.imageText,
-              fontWeight: "normal",
-              color: "rgba(33, 33, 33, 0.8)",
-            }}
-          >
-            email@example.com
-          </Text>
-        </View>
-      </View>
-      <FlatList
-        style={styles.flatList}
-        data={posts}
-        keyExtractor={(item, indx) => indx.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.containerList}>
-            <Image style={styles.imageList} source={{ uri: item.photo.localUri }} />
-            <Text style={styles.textList}>{item.comment}</Text>
-            <View style={styles.containerWrap}>
-              <Text
-                style={styles.wrapText}
-                onPress={() => navigation.navigate("Комментарии",{comment:item.comment})}
-              >
-                <Feather name="message-circle" size={18} color="#BDBDBD" /> 1
-              </Text>
-              <Text
-                style={styles.wrapText}
-                onPress={() => navigation.navigate("Карта",{ location: item.location.coords })}
-              >
-                <Feather name="map-pin" size={18} color="#BDBDBD" />{" "}
-                {/* { item.location.coords } */}
-              </Text>
-            </View>
+  const getAllPost = async () => {
+    const data = await getDocs(collection(db, 'posts'))
+    console.log('data', data)
+    setPosts(
+      data.docs.map((doc) => {
+        return { ...doc.data(), id: doc.id };
+      })
+    );
+  };
+    useEffect(() => {
+      getAllPost()
+    }, []);
+  
+    return (
+      <View style={styles.container}>
+        <View style={styles.containerImage}>
+          {/* <Image style={styles.image} /> */}
+          <View>
+            <Text style={styles.imageText}>Natali Romanova</Text>
+            <Text
+              style={{
+                ...styles.imageText,
+                fontWeight: "normal",
+                color: "rgba(33, 33, 33, 0.8)",
+              }}
+            >
+              email@example.com
+            </Text>
           </View>
-        )}
-      />
-    </View>
-  );
-};
-
+        </View>
+        <FlatList
+          style={styles.flatList}
+          data={posts}
+          keyExtractor={(item, indx) => indx.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.containerList}>
+              <Image style={styles.imageList} source={{ uri: item.photo.localUri }} />
+              <Text style={styles.textList}>{item.comment}</Text>
+              <View style={styles.containerWrap}>
+                <Text
+                  style={styles.wrapText}
+                  onPress={() => navigation.navigate("Комментарии", { comment: item.comment, id: item.id, uri: item.photo.localUri })}
+                >
+                  <Feather name="message-circle" size={18} color="#BDBDBD" /> 1
+                </Text>
+                <Text
+                  style={styles.wrapText}
+                  onPress={() => navigation.navigate("Карта", { location: item.location.coords })}
+                >
+                  <Feather name="map-pin" size={18} color="#BDBDBD" />
+                  {/* { item.location} */}
+                </Text>
+              </View>
+            </View>
+          )}
+        />
+      </View>
+    );
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -118,8 +98,6 @@ const styles = StyleSheet.create({
   containerList: {
     marginBottom: 34,
     borderRadius: 8,
-    // borderWidth: 1,
-    // borderColor: "red",
   },
   imageList: {
     height: 200,
@@ -132,7 +110,6 @@ const styles = StyleSheet.create({
     marginBottom: 11,
     fontFamily: "Roboto",
     fontStyle: "normal",
-    // fontWeight: "medium",
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",

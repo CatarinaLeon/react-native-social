@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Location from "expo-location";
 import { FontAwesome, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc, setDoc, doc,query } from "firebase/firestore"; 
 import {storage, db} from "../../firebase/config";
 
 
@@ -84,15 +84,16 @@ const CreateScreen = ({ navigation }) => {
   
   // Створення колекції Post
     const uploadPostToServer = async () => {
-    const photo =await uploadPhotoToServer();
-    const createPost = await addDoc(collection(db, 'posts'), {
+      await uploadPhotoToServer();
+      const postsRef= doc(collection(db,'posts'))
+      await setDoc(postsRef, {
       photo: photo,
       comment: comment,
       location: location,
       userId: userId,
-      nickName: nickName,
+      
     }) 
-    console.log('createPost', createPost)
+      // console.log('createPost', postsRef.id)
   };
 
   const uploadPhotoToServer = async () => {
@@ -106,14 +107,13 @@ const CreateScreen = ({ navigation }) => {
     const uploadTask = await uploadBytesResumable(storageRef, file);
     console.log("uploadTask", uploadTask);
     const processedPhoto = await getDownloadURL(storageRef)
-    console.log('processedPhoto', processedPhoto)
+    // console.log('processedPhoto', processedPhoto)
     return processedPhoto;
   };
 
 
   const sendPhoto = () => {
     uploadPostToServer();
-    console.log('uploadPostToServer', uploadPostToServer())
     // console.log(' navigation.navigate',  navigation)
     navigation.navigate("HomeScreen");
   };
