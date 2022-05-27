@@ -2,7 +2,7 @@ import { View, Text, StyleSheet,TextInput, TouchableOpacity,Image,SafeAreaView,
   FlatList, ScrollView } from "react-native";
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
-import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { db } from '../../firebase/config'
 // import { collection } from "firebase/firestore";
 import { collection, addDoc,doc, setDoc,query,getDocs,get } from "firebase/firestore";
@@ -86,7 +86,8 @@ const CommentsScreen = ({ route}) => {
         <View >
           <TextInput style={styles.input} placeholder="Комментировать..." onChangeText={setComment}/>
           <TouchableOpacity onPress={createPost} style={styles.sendBtn}>
-            <Feather name="send" size={17} color="#FFFFFF" />
+            <AntDesign name="arrowup" size={20} color="#FFFFFF" />
+            {/* <Feather name="send" size={17} color="" /> */}
           </TouchableOpacity>
         </View>
   </View>

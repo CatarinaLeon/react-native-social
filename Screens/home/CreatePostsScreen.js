@@ -91,6 +91,8 @@ const CreateScreen = ({ navigation }) => {
       comment: comment,
       location: location,
       userId: userId,
+      nickName:nickName,
+      
       
     }) 
       // console.log('createPost', postsRef.id)
@@ -155,6 +157,7 @@ const CreateScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.cameraType}
               onPress={() => {
                 setType(
                   type === Camera.Constants.Type.back
@@ -167,7 +170,7 @@ const CreateScreen = ({ navigation }) => {
                 // style={s.snap}
                 name="camera-retake-outline"
                 size={34}
-                color="#f57b0b"
+                color="#E8E8E8"
               />
             </TouchableOpacity>
         </Camera>
@@ -201,7 +204,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-
     justifyContent: "space-between",
     flexDirection: "column",
     // alignItems: "center",
@@ -218,12 +220,19 @@ const styles = StyleSheet.create({
     height: 240,
     marginHorizontal: 16,
     marginTop: 32,
-    justifyContent: "center",
-    alignItems: "center",
+    
+    // justifyContent: "center",
+    // alignItems: "center",
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
+  },
+  cameraType: {
+    position: 'absolute',
+    top: 10,
+    right:10,
+    zIndex:20,
   },
   takePhotoContainer: {
     position: "absolute",
@@ -237,6 +246,8 @@ const styles = StyleSheet.create({
   snapContainer: {
     borderWidth: 1,
     backgroundColor: "#f6f6f6",
+    top: '35%',
+    left:'40%',
     width: 60,
     height: 60,
     borderRadius: 50,

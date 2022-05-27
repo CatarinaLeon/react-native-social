@@ -11,6 +11,7 @@ import ProfileScreen from "../Screens/home/ProfileScreen";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { View } from "react-native";
 
 const AuthStack = createNativeStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -39,15 +40,17 @@ export const useRoute = (isAuth) => {
   return (
     <MainTab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <MainTab.Screen
-        options={{headerShown: false,
+        options={{
+          headerShown: false,
           tabBarIcon: ({ focused, size, color, backgroundColor }) => (
+            // <View style={{width:70, height:40, borderRadius:20, backgroundColor:'#FF6C00'}}>
             <SimpleLineIcons
               name="grid"
               size={20}
               color={color}
-              //   focused={focused}
-              //   backgroundColor={"#FF6C00"}
+                // focused={{color:'white'}}
             />
+            // </View>
           ),
         }}
         // options={{  }}
@@ -70,6 +73,7 @@ export const useRoute = (isAuth) => {
       />
       <MainTab.Screen
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, size, color }) => (
             <Feather
               name="user"

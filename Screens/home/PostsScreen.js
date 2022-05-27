@@ -10,7 +10,9 @@ const NestedScreen = createNativeStackNavigator();
 const PostsScreen = () => {
   return (
     <NestedScreen.Navigator>
-      <NestedScreen.Screen name="HomeScreen" component={HomeScreen} />
+      <NestedScreen.Screen name="Публикации" component={HomeScreen}
+        // options={{ headerShown: false }}
+      />
       <NestedScreen.Screen name="Комментарии" component={CommentsScreen} />
       <NestedScreen.Screen name="Карта" component={MapScreen} />
     </NestedScreen.Navigator>

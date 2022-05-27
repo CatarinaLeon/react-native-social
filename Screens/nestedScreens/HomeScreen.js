@@ -6,11 +6,11 @@ import { Feather } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  console.log('setPosts', posts)
+  // console.log('setPosts', posts)
   
   const getAllPost = async () => {
     const data = await getDocs(collection(db, 'posts'))
-    console.log('data', data)
+    // console.log('data', data)
     setPosts(
       data.docs.map((doc) => {
         return { ...doc.data(), id: doc.id };
