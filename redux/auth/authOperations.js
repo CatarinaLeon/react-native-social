@@ -4,25 +4,21 @@ import { authSlice } from "./authReducer";
 
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
-// const auth = getAuth(app)
-
 // Реєстрація користувача
-export const authSignUpUser = ({email, password, nickName,userId }) => async (dispatch, getSatte) => { 
+export const authSignUpUser = ({email, password, nickName}) => async (dispatch, getSatte) => { 
     try {
         const data = await createUserWithEmailAndPassword(auth, email, password)
         // console.log('data', data)
-        // const user = await ;
-        // console.log('user', user)
         await updateProfile(auth.currentUser,{
             displayName: nickName,
-            // uid: userId,
+            email: email,
         });
-        // console.log('user', user)
         const upload = await auth.currentUser;
         // console.log('upload', upload)
         const userUpdateProfile = {
         nickName: upload.displayName,
-        userId: upload.uid,
+            userId: upload.uid,
+            email: upload.email
     };
         dispatch(updateUserProfile(userUpdateProfile));
         // console.log('user', user)

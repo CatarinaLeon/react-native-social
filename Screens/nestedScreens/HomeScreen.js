@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { useSelector } from 'react-redux'
 import { collection, getDocs } from "firebase/firestore"; 
 import {db} from "../../firebase/config";
 import { Feather } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  // console.log('setPosts', posts)
+  const { nickName,email } = useSelector((state) => state.auth)
+  console.log('setPosts', posts)
   
   const getAllPost = async () => {
     const data = await getDocs(collection(db, 'posts'))
@@ -26,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.containerImage}>
           {/* <Image style={styles.image} /> */}
           <View>
-            <Text style={styles.imageText}>Natali Romanova</Text>
+            <Text style={styles.imageText}>{nickName}</Text>
             <Text
               style={{
                 ...styles.imageText,
@@ -34,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
                 color: "rgba(33, 33, 33, 0.8)",
               }}
             >
-              email@example.com
+              {email}
             </Text>
           </View>
         </View>
@@ -58,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
                   onPress={() => navigation.navigate("Карта", { location: item.location.coords })}
                 >
                   <Feather name="map-pin" size={18} color="#BDBDBD" />
-                  {/* { item.location} */}
+                  { item.location.coords.latitude}
                 </Text>
               </View>
             </View>
@@ -70,8 +72,9 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginVertical: 32,
-    marginHorizontal: 16,
+    paddingVertical: 32,
+    paddingHorizontal: 16,
+    backgroundColor:"#FFFFFF",
   },
   containerImage: {
     flexDirection: "row",
@@ -102,8 +105,8 @@ const styles = StyleSheet.create({
   imageList: {
     height: 200,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "red",
+    // borderWidth: 1,
+    // borderColor: "red",
     marginBottom: 8,
   },
   textList: {

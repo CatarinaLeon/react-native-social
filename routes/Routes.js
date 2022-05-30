@@ -12,6 +12,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { View } from "react-native";
+import { ScreenStackHeaderLeftView } from "react-native-screens";
 
 const AuthStack = createNativeStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -42,29 +43,25 @@ export const useRoute = (isAuth) => {
       <MainTab.Screen
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color, backgroundColor }) => (
-            // <View style={{width:70, height:40, borderRadius:20, backgroundColor:'#FF6C00'}}>
+          tabBarIcon: ({ focused}) => (
             <SimpleLineIcons
               name="grid"
-              size={20}
-              color={color}
-                // focused={{color:'white'}}
+              size={focused ? 25 : 20}
+              color={focused ? '#FF6C00' : 'rgba(33, 33, 33, 0.8)'}
             />
-            // </View>
           ),
         }}
-        // options={{  }}
-        name="Публикации"
+        name="PostsScreen"
         component={PostsScreen}
       />
       <MainTab.Screen
         options={{
-          tabBarIcon: ({ focused, size, color }) => (
+          headerTitleAlign: 'center',
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name="add"
-              size={24}
-              color={color}
-              //   backgroundColor={"#FF6C00"}
+              size={focused ? 35 : 24}
+              color={focused ? '#FF6C00': 'rgba(33, 33, 33, 0.8)'}
             />
           ),
         }}
@@ -74,12 +71,12 @@ export const useRoute = (isAuth) => {
       <MainTab.Screen
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, size, color }) => (
+          headerTitleAlign: 'center',
+          tabBarIcon: ({ focused }) => (
             <Feather
               name="user"
-              size={24}
-              color={color}
-              //   backgroundColor={"#FF6C00"}
+              size={focused ? 30 : 24}
+              color={focused ? '#FF6C00': 'rgba(33, 33, 33, 0.8)'}
             />
           ),
         }}

@@ -25,9 +25,9 @@ const CreateScreen = ({ navigation }) => {
  const [comment, setComment] = useState("");
   const [location, setLocation] = useState(null);
   // console.log('comment', comment)
-  // console.log('location', location)
+  console.log('location', location)
 
-  const { userId, nickName } = useSelector((state) => state.auth);
+  const { userId, nickName, email } = useSelector((state) => state.auth);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -91,9 +91,8 @@ const CreateScreen = ({ navigation }) => {
       comment: comment,
       location: location,
       userId: userId,
-      nickName:nickName,
-      
-      
+      nickName: nickName,
+      // email: email,
     }) 
       // console.log('createPost', postsRef.id)
   };

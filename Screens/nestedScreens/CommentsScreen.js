@@ -20,7 +20,7 @@ const CommentsScreen = ({ route}) => {
 
   const createPost = async () => {
       const createCom = await doc(collection( db,`posts/${id}/comments`))
-    // console.log('createPost', createCom)
+    // console.log('createCom', createCom)
     await setDoc(createCom, {
       comment: comment,
       nickName: nickName,
@@ -47,7 +47,7 @@ const CommentsScreen = ({ route}) => {
 
   const getAllPosts = async () => {
       const data = await getDocs(collection( db,`posts/${id}/comments`))
-    // console.log('createPost', data)
+    // console.log('data', data)
       setAllComments(
         data.docs.map((doc) => {
           return { ...doc.data(), id: doc.id };
@@ -82,12 +82,12 @@ const CommentsScreen = ({ route}) => {
               
             </>
           )}
+          
         />
         <View >
           <TextInput style={styles.input} placeholder="Комментировать..." onChangeText={setComment}/>
           <TouchableOpacity onPress={createPost} style={styles.sendBtn}>
             <AntDesign name="arrowup" size={20} color="#FFFFFF" />
-            {/* <Feather name="send" size={17} color="" /> */}
           </TouchableOpacity>
         </View>
   </View>
@@ -102,8 +102,6 @@ const styles = StyleSheet.create({
     backgroundColor:'#FFFFFF',
   },
   photoContainer: {
-    // borderColor: "red",
-    // borderWidth: 1,
     height: 240,
     borderRadius: 8,
   },
@@ -111,10 +109,7 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 8,
   },
-  // flatList: {
-  //   // paddingTop: 32,
-  //   paddingBottom:32,
-  // },
+  // flatList: {},
   input: {
     marginTop:16,
     padding:16,
@@ -156,10 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
     borderRadius:6,
   },
-  // commentText: {
-  //   borderWidth: 1,
-  //   borderColor: 'red',
-  // },
+  // commentText: {},
   commentData: {
     textAlign: 'right',
     marginTop: 8,

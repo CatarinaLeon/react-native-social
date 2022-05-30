@@ -57,18 +57,18 @@ getUserPosts()
               <Text style={styles.textList}>{item.comment}</Text>
             <View style={styles.containerWrap}>
               <View style={styles.containerLike}>
+                <Feather name="message-circle" size={18} color="#FF6C00" /> 
                 <Text
                   style={styles.wrapText}
               onPress={() => navigation.navigate("Комментарии",
                 // { comment: item.comment, id: item.id, uri: item.photo.localUri }
               )}
-                >
-                  <Feather name="message-circle" size={18} color="#BDBDBD" /> 1
+                >1
               </Text>
+                  <FontAwesome name="thumbs-o-up" size={18} color="#FF6C00" />
               <Text>
-                <FontAwesome name="thumbs-o-up" size={18} color="#BDBDBD" />
                 2
-              </Text>
+                  </Text>
               </View>
                 <Text
                   style={styles.wrapText}
@@ -77,7 +77,7 @@ getUserPosts()
               )}
                 >
                   <Feather name="map-pin" size={18} color="#BDBDBD" />
-                  {/* { item.location} */}
+                
                 </Text>
               </View>
             </View>
@@ -93,25 +93,20 @@ getUserPosts()
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
   },
     image: {
-    flex: 1,
     width: "100%",
     height: "100%",
-    // backgroundPosition: "center",
+    backgroundPosition: "center",
     resizeMode: "cover",
-    justifyContent: "flex-end",
   },
-   form: {
+  form: {
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    // paddingBottom: 66,
-    paddingTop: 60,
-     marginBottom: 0,
-    paddingHorizontal:16,
+    marginTop: 60,
+    paddingHorizontal: 16,
+    height: "100%",
   },
   buttonDelete: {
     position: 'absolute',
@@ -130,11 +125,11 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     position: "absolute",
     top: -60,
-    left: 130,
+    left: '37%',
     zIndex: 10,
   },
   title: {
-    marginTop: 32,
+    marginTop: 92,
     marginBottom: 33,
     textAlign: 'center',
     // fontWeight: 500,
@@ -148,8 +143,6 @@ const styles = StyleSheet.create({
     imageList: {
     height: 200,
     borderRadius: 8,
-    // borderWidth: 1,
-    // borderColor: "red",
     marginBottom: 8,
   },
     textList: {
