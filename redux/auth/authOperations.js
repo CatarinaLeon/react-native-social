@@ -20,6 +20,7 @@ export const authSignUpUser = ({email, password, nickName, avatar}) => async (di
             nickName: upload.displayName,
             userId: upload.uid,
             email: upload.email,
+            avatar: upload.photoURL,
         };
 
         dispatch(updateUserProfile(userUpdateProfile));
@@ -56,6 +57,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
                 nickName: user.displayName,
                 userId: user.uid,
                 email: user.email,
+                avatar: user.photoURL,
             };
             dispatch(authStateChange({ stateChange: true }));
             dispatch(updateUserProfile(userUpdateProfile));
