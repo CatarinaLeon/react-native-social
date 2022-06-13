@@ -14,13 +14,6 @@ import {
 
 import { authSignInUser } from "../../redux/auth/authOperations";
 
-// import { LogBox } from "react-native";
-// LogBox.ignoreLogs([
-//   "exported from 'deprecated-react-native-prop-types'.",
-//   // "ViewPropTypes will be removed",
-//   // "ColorPropType will be removed",
-// ]);
-
 const initialState = {
   email: "",
   password: "",
@@ -117,7 +110,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    // paddingBottom: 132,
     paddingTop: 32,
     marginBottom: 0,
   },
