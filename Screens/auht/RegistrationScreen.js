@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import {
   StyleSheet,
   View,
@@ -11,32 +11,42 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Dimensions,
+  ScrollView,
+  Image
 } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 import { authSignUpUser } from "../../redux/auth/authOperations";
-
-// import { LogBox } from "react-native";
-// LogBox.ignoreLogs([
-//   // "exported from 'deprecated-react-native-prop-types'.",
-//   "ViewPropTypes will be removed",
-//   "ColorPropType will be removed",
-// ]);
+import { Ionicons } from "@expo/vector-icons";
 
 const initialState = {
   nickName: "",
   email: "",
   password: "",
+  avatar: 'https://i.trbna.com/preset/bi/e/92/47d9e624911ecbc6dc927ef034844.jpeg',
 };
 
 export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setstate] = useState(initialState);
+  const [state, setState] = useState(initialState);
+  console.log('state', state)
 
   const dispatch = useDispatch();
+  
+const takePhotoAvatar = async () => {
+    const pickerAvatar = await ImagePicker.launchImageLibraryAsync();
+    // console.log("pickerAvatar---->", pickerAvatar);
+    if (pickerAvatar.cancelled === true) {
+      return;
+    }
+    setState({...initialState, avatar: pickerAvatar.uri});
+    
+  }
 
-  const [dimensions, setdimensions] = useState(
-    Dimensions.get("window").width - 16 * 2
-  );
+  // const [dimensions, setdimensions] = useState(
+  //   Dimensions.get("window").width - 16 * 2
+  // );
 
+  
   // useEffect(() => {
   //   const onChange = () => {
   //     const width = Dimensions.get("window").width - 16 * 2;
@@ -50,9 +60,8 @@ export default function RegistrationScreen({ navigation }) {
   // }, []);
 
   const handleSubmit = () => {
-    // console.log(state);
     dispatch(authSignUpUser(state));
-    setstate(initialState);
+    setState(initialState);
   };
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -74,9 +83,14 @@ export default function RegistrationScreen({ navigation }) {
                 paddingBottom: isShowKeyboard ? 0 : 66,
               }}
             >
-              <View style={styles.photo}></View>
+              <View style={styles.avatarContainer}>
+                <Image style={styles.avatarImg} source={{uri: state.avatar}}/>
+                <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn} onPress={takePhotoAvatar}>
+                  <Ionicons name={state.avatar ? "close-circle-outline" : "add-circle-outline"} size={24} color="rgba(255, 108, 0, 1)" />
+                </TouchableOpacity>
+              </View>
               <Text style={styles.title}>Регистрация</Text>
-              <View style={styles.formCont}>
+              <View>
                 <TextInput
                   style={styles.input}
                   textAlign={"center"}
@@ -85,7 +99,7 @@ export default function RegistrationScreen({ navigation }) {
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.nickName}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, nickName: value }))
+                    setState((prevState) => ({ ...prevState, nickName: value }))
                   }
                 />
               </View>
@@ -97,7 +111,7 @@ export default function RegistrationScreen({ navigation }) {
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.email}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, email: value }))
+                    setState((prevState) => ({ ...prevState, email: value }))
                   }
                 />
               </View>
@@ -109,7 +123,7 @@ export default function RegistrationScreen({ navigation }) {
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.password}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, password: value }))
+                    setState((prevState) => ({ ...prevState, password: value }))
                   }
                 />
               </View>
@@ -140,7 +154,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
-    // backgroundPosition: "center",
     resizeMode: "cover",
     justifyContent: "flex-end",
   },
@@ -148,24 +161,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
-    // paddingBottom: 66,
-    paddingTop: 60,
+    paddingTop: 92,
     marginBottom: 0,
   },
-  photo: {
-    backgroundColor: "#f6f6f6",
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    position: "absolute",
-    top: -60,
-    left: 130,
-    zIndex: 10,
-  },
-
   title: {
-    marginBottom: 33,
-    marginTop: 32,
+    marginBottom: 32,
+    marginTop: 0,
     textAlign: "center",
     fontFamily: "Roboto",
     fontStyle: "normal",
@@ -216,5 +217,25 @@ const styles = StyleSheet.create({
     color: "#1B4371",
     textAlign: "center",
     marginTop: 16,
+  },
+  avatarContainer: {
+    backgroundColor: "#f6f6f6",
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    position: "absolute",
+    top: -55,
+    left: '37%',
+    zIndex: 20,
+  },
+  avatarImg: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+  },
+  avatarBtn: {
+    position: 'absolute',
+    top: 80,
+    right:-12,
   },
 });

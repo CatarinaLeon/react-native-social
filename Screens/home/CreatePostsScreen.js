@@ -21,13 +21,13 @@ import {storage, db} from "../../firebase/config";
 const CreateScreen = ({ navigation }) => {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState(null);
-  // console.log('photo=============', photo)
- const [comment, setComment] = useState("");
+  const [comment, setComment] = useState("");
   const [location, setLocation] = useState(null);
+  // console.log('photo===>', photo)
   // console.log('comment', comment)
-  console.log('location', location)
-
-  const { userId, nickName, email } = useSelector((state) => state.auth);
+  // console.log('location', location)
+  
+  const { userId, nickName, email, avatar} = useSelector((state) => state.auth);
 
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -42,7 +42,7 @@ const CreateScreen = ({ navigation }) => {
     // console.log("pickerResult---->", pickerResult);
     if (pickerResult.cancelled === true) {
       return;
-    }
+    } 
     setPhoto({ localUri: pickerResult.uri });
     
   }
@@ -85,14 +85,15 @@ const CreateScreen = ({ navigation }) => {
   // Створення колекції Post
     const uploadPostToServer = async () => {
       await uploadPhotoToServer();
-      const postsRef= doc(collection(db,'posts'))
+      const postsRef = doc(collection(db, 'posts'))
       await setDoc(postsRef, {
-      photo: photo,
-      comment: comment,
-      location: location,
-      userId: userId,
-      nickName: nickName,
-      // email: email,
+        photo: photo,
+        comment: comment,
+        location: location,
+        userId: userId,
+        nickName: nickName,
+        email: email,
+        avatar: avatar,
     }) 
       // console.log('createPost', postsRef.id)
   };
@@ -105,8 +106,9 @@ const CreateScreen = ({ navigation }) => {
     // const uniquePostId = Date.now().toString();
     const storageRef = await ref(storage, 'postImage/'+ file.data.name)
     // console.log('storageRef', storageRef)
-    const uploadTask = await uploadBytesResumable(storageRef, file);
-    console.log("uploadTask", uploadTask);
+    // const uploadTask =
+      await uploadBytesResumable(storageRef, file);
+    // console.log("uploadTask", uploadTask);
     const processedPhoto = await getDownloadURL(storageRef)
     // console.log('processedPhoto', processedPhoto)
     return processedPhoto;
@@ -116,15 +118,16 @@ const CreateScreen = ({ navigation }) => {
   const sendPhoto = () => {
     uploadPostToServer();
     // console.log(' navigation.navigate',  navigation)
-    navigation.navigate("HomeScreen");
+    navigation.navigate("PostsScreen");
   };
-
+  
     useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Разрешение на доступ к местоположению было отклонено");
       }
+      
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();

@@ -4,55 +4,44 @@ import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { db } from '../../firebase/config'
-// import { collection } from "firebase/firestore";
-import { collection, addDoc,doc, setDoc,query,getDocs,get } from "firebase/firestore";
+import { collection, addDoc,doc, setDoc, query,getDocs, onSnapshot } from "firebase/firestore";
 // import { async } from "@firebase/util";
 
 const CommentsScreen = ({ route}) => {
-  const { id,uri } = route.params
-  // const{photo.localUri}=route.params
-  console.log('id', uri)
+  const { id, uri } = route.params
+  // console.log('id', uri)
+
   const [comment, setComment] = useState('')
-  // console.log('comment=>', comment)
+  console.log('comment=>', comment)
   const [allComments, setAllComments] = useState([]);
-  // console.log('allComments=>', allComments)
+  console.log('allComment s=>', allComments)
+
   const { nickName } = useSelector((state) => state.auth)
 
   const createPost = async () => {
-      const createCom = await doc(collection( db,`posts/${id}/comments`))
-    // console.log('createCom', createCom)
-    await setDoc(createCom, {
+    const createComments = await doc(collection( db,`posts/${id}/comments`))
+    // console.log('createComments', createComments)
+    await setDoc(createComments, {
       comment: comment,
       nickName: nickName,
     }) 
   }
 
-  // const createPost = async () => {
-  //   const q = query(collection(db, "posts"));
-  //   // console.log('q=>', q)
-  //   const querySnapshot = await getDocs(q);
-  //   // console.log('querySnapshot=>', querySnapshot)
-  //       const queryData = querySnapshot.docs.map((detail) => ({
-  //           ...detail.data(),
-  //           id: detail.id,
-  //       }));
-  //     console.log('queryData=>', queryData)
-  //   const data = queryData.map(async (v) => {
-  //           await setDoc(doc(db, `posts/${v.id}/comments`,comment), {
-  //             comment: comment, nickName: nickName
-  //           });
-  //   })
-  //   console.log('data=>', data)
-  // }
+const handleSubmit = () => {
+    createPost();
+  };
 
   const getAllPosts = async () => {
-      const data = await getDocs(collection( db,`posts/${id}/comments`))
-    // console.log('data', data)
+    // const data = await getDocs(collection(db, `posts/${id}/comments`))
+    const q = await query(collection(db, `posts/${id}/comments`));
+    await onSnapshot(q, (data) => {
       setAllComments(
         data.docs.map((doc) => {
           return { ...doc.data(), id: doc.id };
         })
-      );
+      );})
+    // console.log('data', data)
+      
   };
 
   useEffect(() => {
@@ -79,14 +68,12 @@ const CommentsScreen = ({ route}) => {
                 <Text style={styles.commentData}>26.05.22</Text>
               </View>
               </View>
-              
             </>
           )}
-          
         />
         <View >
           <TextInput style={styles.input} placeholder="Комментировать..." onChangeText={setComment}/>
-          <TouchableOpacity onPress={createPost} style={styles.sendBtn}>
+          <TouchableOpacity onPress={handleSubmit} style={styles.sendBtn}>
             <AntDesign name="arrowup" size={20} color="#FFFFFF" />
           </TouchableOpacity>
         </View>

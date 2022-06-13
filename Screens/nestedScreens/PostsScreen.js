@@ -1,24 +1,37 @@
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { useSelector } from 'react-redux'
-import { collection, getDocs } from "firebase/firestore"; 
-import {db} from "../../firebase/config";
+import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+
+import { collection, onSnapshot,query } from "firebase/firestore"; 
+import { db } from "../../firebase/config";
+
 import { Feather } from "@expo/vector-icons";
 
-const HomeScreen = ({ navigation }) => {
+const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  const { nickName,email } = useSelector((state) => state.auth)
-  console.log('setPosts', posts)
-  
+  // console.log('posts', posts)
+  const { nickName, email, avatar } = useSelector((state) => state.auth)
+
   const getAllPost = async () => {
-    const data = await getDocs(collection(db, 'posts'))
-    // console.log('data', data)
+    // Прослуховувати документ за допомогою onSnapshot()
+    const q = await query(collection(db, "posts"));
+    await onSnapshot(q, (data) => {
     setPosts(
-      data.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id };
-      })
-    );
+          data.docs.map((doc) => {
+            return { ...doc.data(), id: doc.id };
+          })
+        );
+    });
+    // Отримати дані один раз =>
+    // const data = await getDocs(collection(db, 'posts'))
+    // console.log('data', data)
+    // setPosts(
+    //   data.docs.map((doc) => {
+    //     return { ...doc.data(), id: doc.id };
+    //   })
+    // );
   };
+  
     useEffect(() => {
       getAllPost()
     }, []);
@@ -26,7 +39,7 @@ const HomeScreen = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <View style={styles.containerImage}>
-          {/* <Image style={styles.image} /> */}
+          <Image style={styles.image} source={{uri: avatar}}/>
           <View>
             <Text style={styles.imageText}>{nickName}</Text>
             <Text
@@ -60,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
                   onPress={() => navigation.navigate("Карта", { location: item.location.coords })}
                 >
                   <Feather name="map-pin" size={18} color="#BDBDBD" />
-                  { item.location.coords.latitude}
+                  {/* { {location:item.location.coords}} */}
                 </Text>
               </View>
             </View>
@@ -86,8 +99,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 16,
     marginRight: 8,
-    borderWidth: 1,
-    borderColor: "red",
   },
   imageText: {
     fontFamily: "Roboto",
@@ -105,8 +116,6 @@ const styles = StyleSheet.create({
   imageList: {
     height: 200,
     borderRadius: 8,
-    // borderWidth: 1,
-    // borderColor: "red",
     marginBottom: 8,
   },
   textList: {
@@ -131,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default PostsScreen;

@@ -1,18 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import RegistrationScreen from "../Screens/auht/RegistrationScreen";
 import LoginScreen from "../Screens/auht/LoginScreen";
-import PostsScreen from "../Screens/home/PostsScreen";
+import HomeScreen from "../Screens/home/HomeScreen";
 import CreateScreen from "../Screens/home/CreatePostsScreen";
 import ProfileScreen from "../Screens/home/ProfileScreen";
 
-import { SimpleLineIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { View } from "react-native";
-import { ScreenStackHeaderLeftView } from "react-native-screens";
+import {SimpleLineIcons, Ionicons, Feather} from "@expo/vector-icons";
 
 const AuthStack = createNativeStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -51,8 +46,8 @@ export const useRoute = (isAuth) => {
             />
           ),
         }}
-        name="PostsScreen"
-        component={PostsScreen}
+        name="HomeScreen"
+        component={HomeScreen}
       />
       <MainTab.Screen
         options={{

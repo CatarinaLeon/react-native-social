@@ -1,16 +1,16 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../nestedScreens/HomeScreen";
+import PostsScreen from "../nestedScreens/PostsScreen";
 import CommentsScreen from "../nestedScreens/CommentsScreen";
 import MapScreen from "../nestedScreens/MapScreen";
 // import { AntDesign } from '@expo/vector-icons'; 
 
 const NestedScreen = createNativeStackNavigator();
 
-const PostsScreen = () => {
+const HomeScreen = () => {
   return (
     <NestedScreen.Navigator options={{}}>
-      <NestedScreen.Screen name="HomeScreen" component={HomeScreen}
+      <NestedScreen.Screen name="PostsScreen" component={PostsScreen}
         options={{
           title: 'Публикации', headerTitleAlign: 'center',
           // headerBackImageSource: true,
@@ -23,5 +23,5 @@ const PostsScreen = () => {
   );
 };
 
-export default PostsScreen;
+export default HomeScreen;
 
