@@ -5,23 +5,24 @@ import { authSlice } from "./authReducer";
 const { updateUserProfile, authStateChange, authSignOut } = authSlice.actions;
 
 // Реєстрація користувача
-export const authSignUpUser = ({email, password, nickName}) => async (dispatch, getSatte) => { 
+export const authSignUpUser = ({email, password, nickName, avatar}) => async (dispatch, getSatte) => { 
     try {
-        const data = await createUserWithEmailAndPassword(auth, email, password)
-        // console.log('data', data)
+        await createUserWithEmailAndPassword(auth, email, password)
         await updateProfile(auth.currentUser,{
             displayName: nickName,
             email: email,
+            photoURL: avatar,
         });
+        
         const upload = await auth.currentUser;
-        // console.log('upload', upload)
+        console.log('upload', upload)
         const userUpdateProfile = {
-        nickName: upload.displayName,
+            nickName: upload.displayName,
             userId: upload.uid,
-            email: upload.email
-    };
+            email: upload.email,
+        };
+
         dispatch(updateUserProfile(userUpdateProfile));
-        // console.log('user', user)
     } catch (error) {
         console.log("error", error);
         console.log('error.message',error.message)
@@ -31,8 +32,9 @@ export const authSignUpUser = ({email, password, nickName}) => async (dispatch, 
  // Вхід користувача
 export const authSignInUser = ({email, password}) => async (dispatch, getSatte) => { 
     try {
-        const user = await signInWithEmailAndPassword(auth, email, password)
-        console.log('user2', user)
+        // const user =
+            await signInWithEmailAndPassword(auth, email, password)
+        // console.log('user', user)
     } catch (error) {
         console.log("error", error);
         console.log("error.code", error.code);
@@ -53,9 +55,12 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
             const userUpdateProfile = {
                 nickName: user.displayName,
                 userId: user.uid,
+                email: user.email,
             };
             dispatch(authStateChange({ stateChange: true }));
             dispatch(updateUserProfile(userUpdateProfile));
         }
     })
 };
+
+
