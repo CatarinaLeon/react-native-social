@@ -86,6 +86,7 @@ const CreateScreen = ({ navigation }) => {
     const uploadPostToServer = async () => {
       await uploadPhotoToServer();
       const postsRef = doc(collection(db, 'posts'))
+      // console.log('postsRef', postsRef.id)
       await setDoc(postsRef, {
         photo: photo,
         comment: comment,
@@ -94,8 +95,8 @@ const CreateScreen = ({ navigation }) => {
         nickName: nickName,
         email: email,
         avatar: avatar,
+        // liked: Number(),
     }) 
-      // console.log('createPost', postsRef.id)
   };
 
   const uploadPhotoToServer = async () => {

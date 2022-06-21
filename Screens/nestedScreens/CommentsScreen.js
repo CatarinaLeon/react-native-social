@@ -5,27 +5,31 @@ import { useState, useEffect } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { db } from '../../firebase/config'
 import { collection, addDoc,doc, setDoc, query,getDocs, onSnapshot } from "firebase/firestore";
-// import { async } from "@firebase/util";
 
 const CommentsScreen = ({ route}) => {
-  const { id, uri } = route.params
-  // console.log('id', uri)
+  const { id, uri,comment } = route.params
+  // console.log('id', id)
 
-  const [comment, setComment] = useState('')
-  console.log('comment=>', comment)
+  const [comments, setComments] = useState('')
+  // console.log('comments=>', comments)
   const [allComments, setAllComments] = useState([]);
-  console.log('allComment s=>', allComments)
+  // console.log('allComment s=>', allComments)
 
-  const { nickName } = useSelector((state) => state.auth)
+  const { avatar } = useSelector((state) => state.auth)
+
+  const nowDate = new Date().toLocaleDateString();
+  // console.log(nowDate);
 
   const createPost = async () => {
     const createComments = await doc(collection( db,`posts/${id}/comments`))
     // console.log('createComments', createComments)
     await setDoc(createComments, {
-      comment: comment,
-      nickName: nickName,
+      comment: comments,
+      avatar: avatar,
+      date: nowDate,
     }) 
   }
+
 
 const handleSubmit = () => {
     createPost();
@@ -35,13 +39,12 @@ const handleSubmit = () => {
     // const data = await getDocs(collection(db, `posts/${id}/comments`))
     const q = await query(collection(db, `posts/${id}/comments`));
     await onSnapshot(q, (data) => {
+      // console.log('data', data)
       setAllComments(
         data.docs.map((doc) => {
           return { ...doc.data(), id: doc.id };
         })
       );})
-    // console.log('data', data)
-      
   };
 
   useEffect(() => {
@@ -54,6 +57,7 @@ const handleSubmit = () => {
           <Image
             style={styles.commentPhoto}
             source={{ uri }} />
+          <Text style={styles.commentPhotoText}>{comment}</Text>
         </View>
         <FlatList 
           style={styles.flatList}
@@ -61,18 +65,18 @@ const handleSubmit = () => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <>
-          <View style={styles.commentContainer}>
-            <Text style={styles.commentNick}>{nickName}</Text>
+              <View style={styles.commentContainer}>
+                <Image style={styles.commentAvatar} source={{uri: item.avatar}}/>
               <View style={styles.commentContText}>
                 <Text style={styles.commentText}>{item.comment}</Text>
-                <Text style={styles.commentData}>26.05.22</Text>
+                  <Text style={styles.commentData}>{item.date}</Text>
               </View>
               </View>
             </>
           )}
         />
         <View >
-          <TextInput style={styles.input} placeholder="Комментировать..." onChangeText={setComment}/>
+          <TextInput style={styles.input} placeholder="Комментировать..." onChangeText={setComments}/>
           <TouchableOpacity onPress={handleSubmit} style={styles.sendBtn}>
             <AntDesign name="arrowup" size={20} color="#FFFFFF" />
           </TouchableOpacity>
@@ -95,8 +99,19 @@ const styles = StyleSheet.create({
   commentPhoto: {
     height: 240,
     borderRadius: 8,
+    marginBottom:10,
   },
-  // flatList: {},
+  commentPhotoText: {
+    marginLeft: 5,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  flatList: {
+    marginTop:40,
+  },
   input: {
     marginTop:16,
     padding:16,
@@ -123,6 +138,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 24,
+  },
+  commentAvatar: {
+    width: 28,
+    height: 28,
+    borderRadius:50,
   },
   commentNick: {
     marginRight:16,

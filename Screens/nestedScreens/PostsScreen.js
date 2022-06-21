@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux'
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 
-import { collection, onSnapshot,query } from "firebase/firestore"; 
+import { collection, onSnapshot,query,data,ref } from "firebase/firestore"; 
 import { db } from "../../firebase/config";
 
 import { Feather } from "@expo/vector-icons";
@@ -31,10 +31,22 @@ const PostsScreen = ({ navigation }) => {
     //   })
     // );
   };
+
+  // const getCount = (ref) => {
+  //   // Sum the count of each shard in the subcollection
+  //   return ref.collection('posts').get().then((snapshot) => {
+  //       let total_count = 0;
+  //       snapshot.forEach((doc) => {
+  //           total_count += doc.data().count;
+  //       });
+  //       console.log('total_count', total_count)
+  //       return total_count;
+  //   });
+  // }
   
-    useEffect(() => {
+  useEffect(() => {
       getAllPost()
-    }, []);
+    }, []); 
   
     return (
       <View style={styles.container}>

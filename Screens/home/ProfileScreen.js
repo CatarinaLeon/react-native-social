@@ -4,11 +4,12 @@ import { View, Text, StyleSheet, Button,ImageBackground,FlatList, Image,Touchabl
 import { useDispatch,useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 import { Feather, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { collection, query, where, getDocs, onSnapshot,docs, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, onSnapshot,docs, doc, updateDoc,increment  } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
+
   const [userPosts, setUserPosts] = useState([]);
   // console.log('userPost', userPosts)
   const [liked, setLiked] = useState(0);
@@ -18,19 +19,24 @@ const ProfileScreen = () => {
 
   const getUserPosts = async () => {
     const q = query(collection(db, "posts"), where("userId", "==", userId));
+    // console.log('q', q)
     await onSnapshot(q, (data) => {
-      setUserPosts(data.docs.map((doc) => { return { ...doc.data() } }))
+    //  console.log('data', data)
+      setUserPosts(data.docs.map((doc) => {
+        // console.log('doc', doc.data())
+        return { ...doc.data(), id: doc.id }
+      }))
     });
   }
 
-  // const getCurrentUserPost = async () => {
-  //     const postsRef = query(collection(db, 'posts')) 
-  //     await updateDoc(postsRef, {
-  //       avatar: avatar,
-  // });
-  
-  // }
-  
+  const updateFieldLiked = async (id) => {
+    const postsRef = await doc(db,`posts/${id}`);
+    console.log("postsRef", postsRef);
+    await updateDoc(postsRef, {
+        liked: increment(+1),
+  });
+  }
+
   useEffect(() => {
     getUserPosts()
     // console.log('getUserPosts()', getUserPosts())
@@ -73,17 +79,17 @@ const ProfileScreen = () => {
                       { comment: item.comment, id: item.id, uri: item.photo.localUri }
                     )}>
                       <Feather name="message-circle" size={18} color="#FF6C00" />
-                      <Text style={{...styles.wrapText, marginLeft:5}}>{item.like ? item.like : 0}</Text>
+                      <Text style={{...styles.wrapText, marginLeft:5}}>0</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.buttonLike}
-                      // onPress={()=>getCurrentUserPost(item.id)}
+                      onPress={() => updateFieldLiked(item.id)}
                     >
                       <FontAwesome
                         name="thumbs-o-up"
                         size={18}
                         color="#FF6C00" />
-                      <Text style={{marginLeft:5}}>{item.liked ? item.liked : 0}</Text>
+                      <Text style={{marginLeft:5}}>{item.liked}</Text>
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity onPress={() => navigation.navigate("Карта", { location: item.location.coords })}>
@@ -92,7 +98,6 @@ const ProfileScreen = () => {
                       {/* {item.location} */}
                     </Text>
                   </TouchableOpacity>
-                  
                 </View>
               </View>
             )}
@@ -118,7 +123,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     marginTop: 100,
-    paddingTop:90,
+    paddingTop: 75,
+    paddingBottom:100,
     paddingHorizontal: 16,
     height: "100%",
   },
@@ -155,8 +161,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight:35,
   },
-    containerList: {
-    marginBottom: 34,
+    flatList: {
+    paddingBottom: 64,
     borderRadius: 8,
   },
     imageList: {
@@ -173,7 +179,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   containerLike: {
-    width:80,
+    width:90,
     flexDirection: "row",
     justifyContent: "space-between",
   },
