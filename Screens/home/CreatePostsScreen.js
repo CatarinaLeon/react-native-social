@@ -23,9 +23,14 @@ const CreateScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
   const [location, setLocation] = useState(null);
-  // console.log('photo===>', photo)
-  // console.log('comment', comment)
-  // console.log('location', location)
+  const [coords, setCoords] = useState(null)
+  // console.log('photo=>', photo)
+  // console.log('comment=>', comment)
+  // console.log('location=>', location)
+  console.log('coords=>', coords)
+
+  // const text = JSON.stringify(location);
+  //     console.log('text', text)
   
   const { userId, nickName, email, avatar} = useSelector((state) => state.auth);
 
@@ -91,11 +96,12 @@ const CreateScreen = ({ navigation }) => {
         photo: photo,
         comment: comment,
         location: location,
+        locationCoords: coords,
         userId: userId,
         nickName: nickName,
         email: email,
         avatar: avatar,
-        // liked: Number(),
+        liked: Number(),
     }) 
   };
 
@@ -124,13 +130,16 @@ const CreateScreen = ({ navigation }) => {
   
     useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Разрешение на доступ к местоположению было отклонено");
       }
-      
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      const locationCoords = await Location.getCurrentPositionAsync({});
+      // console.log('locationCoords=>', locationCoords)
+      setCoords(locationCoords)
+      const location = await Location.reverseGeocodeAsync(locationCoords.coords)
+      // console.log('location=>', location[0])
+      setLocation(location[0]);
     })();
   }, []);
 
@@ -178,22 +187,22 @@ const CreateScreen = ({ navigation }) => {
             </TouchableOpacity>
         </Camera>
         <TouchableOpacity onPress={openImagePickerAsync}>
-          <Text style={styles.photo}>Загрузите фото</Text>
+          <Text style={styles.photo}>Завантажити фото</Text>
         </TouchableOpacity>
         <View style={styles.formContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Название..."
+            placeholder="Назва..."
             onChangeText={setComment}
           />
           <TextInput
             style={{ ...styles.input, marginTop: 32 }}
-            placeholder="Местность..."
+            placeholder="Місцевість..."
             onChangeText={setLocation}
           />
         </View>
         <TouchableOpacity onPress={sendPhoto} activeOpacity={0.8}>
-          <Text style={styles.button}>Опубликовать</Text>
+          <Text style={styles.button}>Опублікувати</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity activeOpacity={0.9} style={styles.buttonDelete}>

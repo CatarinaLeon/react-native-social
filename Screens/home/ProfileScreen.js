@@ -12,7 +12,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   const [userPosts, setUserPosts] = useState([]);
   // console.log('userPost', userPosts)
-  const [liked, setLiked] = useState(0);
+  // const [liked, setLiked] = useState();
   // console.log('liked', liked)
 
   const { userId, nickName, avatar} = useSelector((state) => state.auth);
@@ -31,7 +31,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   const updateFieldLiked = async (id) => {
     const postsRef = await doc(db,`posts/${id}`);
-    console.log("postsRef", postsRef);
+    // console.log("postsRef", postsRef);
     await updateDoc(postsRef, {
         liked: increment(+1),
   });
@@ -70,35 +70,35 @@ const ProfileScreen = ({ navigation, route }) => {
                 <Image style={styles.imageList}
                   source={{ uri: item.photo.localUri }}
                 />
-                <Text style={styles.textList}>{item.comment}</Text>
                 <View style={styles.containerWrap}>
                   <View style={styles.containerLike}>
                     <TouchableOpacity
                       style={styles.buttonLike}
-                      onPress={() => navigation.navigate("Комментарии",
+                      onPress={() => navigation.navigate("Коментарі",
                       { comment: item.comment, id: item.id, uri: item.photo.localUri }
                     )}>
                       <Feather name="message-circle" size={18} color="#FF6C00" />
-                      <Text style={{...styles.wrapText, marginLeft:5}}>0</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.buttonLike}
                       onPress={() => updateFieldLiked(item.id)}
                     >
                       <FontAwesome
-                        name="thumbs-o-up"
+                        name={item.liked===0 ?"heart-o" : "heart" }
                         size={18}
-                        color="#FF6C00" />
-                      <Text style={{marginLeft:5}}>{item.liked}</Text>
+                        color="#FF6C00"
+                      />
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity onPress={() => navigation.navigate("Карта", { location: item.location.coords })}>
+                  <TouchableOpacity
+                    style={styles.buttonLike}
+                    onPress={() => navigation.navigate("Карта", { locationCoords: item.locationCoords })}>
                     <Feather name="map-pin" size={18} color="#BDBDBD" />
-                    <Text style={styles.wrapText} >
-                      {/* {item.location} */}
-                    </Text>
+                    <Text style={styles.wrapText}>{item.location.country}</Text>
                   </TouchableOpacity>
                 </View>
+                <Text style={{ marginBottom: 8, marginTop: 5 }}>Подобається: {item.liked}</Text>
+                <Text style={styles.textList}>{item.nickName}: {item.comment}</Text>
               </View>
             )}
           />
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 0,
-    marginBottom: 33,
+    marginBottom: 30,
     textAlign: 'center',
     // fontWeight: 500,
     fontSize: 30,
@@ -165,13 +165,16 @@ const styles = StyleSheet.create({
     paddingBottom: 64,
     borderRadius: 8,
   },
+  containerList: {
+      marginBottom:25,
+    },
     imageList: {
     height: 200,
     borderRadius: 8,
     marginBottom: 8,
   },
     textList: {
-    marginBottom: 11,
+    // marginBottom: 11,
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontSize: 16,
@@ -179,18 +182,20 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   containerLike: {
-    width:90,
+    width: 50,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   buttonLike: {
     flexDirection: "row",
+    height:20,
   },
   containerWrap: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   wrapText: {
+    marginLeft:5,
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",

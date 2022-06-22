@@ -60,7 +60,7 @@ export const useRoute = (isAuth) => {
             />
           ),
         }}
-        name="Создать публикацию"
+        name="Створити публікацію"
         component={CreateScreen}
       />
       <MainTab.Screen

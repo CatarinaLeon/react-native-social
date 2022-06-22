@@ -12,12 +12,12 @@ const HomeScreen = () => {
     <NestedScreen.Navigator options={{}}>
       <NestedScreen.Screen name="PostsScreen" component={PostsScreen}
         options={{
-          title: 'Публикации', headerTitleAlign: 'center',
+          title: 'Публікації', headerTitleAlign: 'center',
           // headerBackImageSource: true,
           // headerBackImage: () => <AntDesign name="arrowleft" size={24} color="black" />,
         }}
       />
-      <NestedScreen.Screen name="Комментарии" component={CommentsScreen} options={{headerTitleAlign:'center'}}/>
+      <NestedScreen.Screen name="Коментарі" component={CommentsScreen} options={{headerTitleAlign:'center'}}/>
       <NestedScreen.Screen name="Карта" component={MapScreen} options={{headerTitleAlign:'center'}}/>
     </NestedScreen.Navigator>
   );

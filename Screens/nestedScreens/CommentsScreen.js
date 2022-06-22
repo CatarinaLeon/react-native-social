@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet,TextInput, TouchableOpacity,Image,SafeAreaView,
-  FlatList, ScrollView } from "react-native";
+  FlatList } from "react-native";
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { db } from '../../firebase/config'
-import { collection, addDoc,doc, setDoc, query,getDocs, onSnapshot } from "firebase/firestore";
+import { collection, doc, setDoc, query, onSnapshot } from "firebase/firestore";
 
-const CommentsScreen = ({ route}) => {
-  const { id, uri,comment } = route.params
+const CommentsScreen = ({ route }) => {
+  const { id, uri, comment } = route.params
   // console.log('id', id)
 
   const [comments, setComments] = useState('')
@@ -21,22 +21,21 @@ const CommentsScreen = ({ route}) => {
   // console.log(nowDate);
 
   const createPost = async () => {
-    const createComments = await doc(collection( db,`posts/${id}/comments`))
+    const createComments = await doc(collection(db, `posts/${id}/comments`))
     // console.log('createComments', createComments)
     await setDoc(createComments, {
       comment: comments,
       avatar: avatar,
       date: nowDate,
-    }) 
+    })
   }
 
-
-const handleSubmit = () => {
+  const handleSubmit = () => {
     createPost();
   };
 
   const getAllPosts = async () => {
-    // const data = await getDocs(collection(db, `posts/${id}/comments`))
+    // const q = await getDocs(collection(db, `posts/${id}/comments`))
     const q = await query(collection(db, `posts/${id}/comments`));
     await onSnapshot(q, (data) => {
       // console.log('data', data)
@@ -44,44 +43,45 @@ const handleSubmit = () => {
         data.docs.map((doc) => {
           return { ...doc.data(), id: doc.id };
         })
-      );})
+      );
+    })
   };
 
   useEffect(() => {
     getAllPosts();
   }, []);
 
-    return (
-      <View style={styles.container}>
-        <View style={styles.photoContainer}>
-          <Image
-            style={styles.commentPhoto}
-            source={{ uri }} />
-          <Text style={styles.commentPhotoText}>{comment}</Text>
-        </View>
-        <FlatList 
-          style={styles.flatList}
-          data={allComments}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <>
-              <View style={styles.commentContainer}>
-                <Image style={styles.commentAvatar} source={{uri: item.avatar}}/>
+  return (
+    <View style={styles.container}>
+      <View style={styles.photoContainer}>
+        <Image
+          style={styles.commentPhoto}
+          source={{ uri }} />
+        <Text style={styles.commentPhotoText}>{comment}</Text>
+      </View>
+      <FlatList
+        style={styles.flatList}
+        data={allComments}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <>
+            <View style={styles.commentContainer}>
+              <Image style={styles.commentAvatar} source={{ uri: item.avatar }} />
               <View style={styles.commentContText}>
                 <Text style={styles.commentText}>{item.comment}</Text>
-                  <Text style={styles.commentData}>{item.date}</Text>
+                <Text style={styles.commentData}>{item.date}</Text>
               </View>
-              </View>
-            </>
-          )}
-        />
-        <View >
-          <TextInput style={styles.input} placeholder="Комментировать..." onChangeText={setComments}/>
-          <TouchableOpacity onPress={handleSubmit} style={styles.sendBtn}>
-            <AntDesign name="arrowup" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
-  </View>
+            </View>
+          </>
+        )}
+      />
+      <View >
+        <TextInput style={styles.input} placeholder="Коментувати..." onChangeText={setComments} />
+        <TouchableOpacity onPress={handleSubmit} style={styles.sendBtn}>
+          <AntDesign name="arrowup" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
+      </View>
+    </View>
   )
 };
 

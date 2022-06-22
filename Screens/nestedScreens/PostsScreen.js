@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux'
-import { View, Text, StyleSheet, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
 
-import { collection, onSnapshot,query,data,ref } from "firebase/firestore"; 
+import { collection, onSnapshot,query } from "firebase/firestore"; 
 import { db } from "../../firebase/config";
 
 import { Feather } from "@expo/vector-icons";
@@ -16,11 +16,11 @@ const PostsScreen = ({ navigation }) => {
     // Прослуховувати документ за допомогою onSnapshot()
     const q = await query(collection(db, "posts"));
     await onSnapshot(q, (data) => {
-    setPosts(
-          data.docs.map((doc) => {
-            return { ...doc.data(), id: doc.id };
-          })
-        );
+      setPosts(
+        data.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        })
+      );
     });
     // Отримати дані один раз =>
     // const data = await getDocs(collection(db, 'posts'))
@@ -32,68 +32,57 @@ const PostsScreen = ({ navigation }) => {
     // );
   };
 
-  // const getCount = (ref) => {
-  //   // Sum the count of each shard in the subcollection
-  //   return ref.collection('posts').get().then((snapshot) => {
-  //       let total_count = 0;
-  //       snapshot.forEach((doc) => {
-  //           total_count += doc.data().count;
-  //       });
-  //       console.log('total_count', total_count)
-  //       return total_count;
-  //   });
-  // }
-  
   useEffect(() => {
-      getAllPost()
-    }, []); 
+    getAllPost()
+  }, []);
   
-    return (
-      <View style={styles.container}>
-        <View style={styles.containerImage}>
-          <Image style={styles.image} source={{uri: avatar}}/>
-          <View>
-            <Text style={styles.imageText}>{nickName}</Text>
-            <Text
-              style={{
-                ...styles.imageText,
-                fontWeight: "normal",
-                color: "rgba(33, 33, 33, 0.8)",
-              }}
-            >
-              {email}
-            </Text>
-          </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerImage}>
+        <Image style={styles.image} source={{ uri: avatar }} />
+        <View>
+          <Text style={styles.imageText}>{nickName}</Text>
+          <Text
+            style={{
+              ...styles.imageText,
+              fontWeight: "normal",
+              color: "rgba(33, 33, 33, 0.8)",
+            }}
+          >
+            {email}
+          </Text>
         </View>
-        <FlatList
-          style={styles.flatList}
-          data={posts}
-          keyExtractor={(item, indx) => indx.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.containerList}>
-              <Image style={styles.imageList} source={{ uri: item.photo.localUri }} />
-              <Text style={styles.textList}>{item.comment}</Text>
-              <View style={styles.containerWrap}>
-                <Text
-                  style={styles.wrapText}
-                  onPress={() => navigation.navigate("Комментарии", { comment: item.comment, id: item.id, uri: item.photo.localUri })}
-                >
-                  <Feather name="message-circle" size={18} color="#BDBDBD" /> 1
-                </Text>
-                <Text
-                  style={styles.wrapText}
-                  onPress={() => navigation.navigate("Карта", { location: item.location.coords })}
-                >
-                  <Feather name="map-pin" size={18} color="#BDBDBD" />
-                  {/* { {location:item.location.coords}} */}
-                </Text>
-              </View>
-            </View>
-          )}
-        />
       </View>
-    );
-}
+      <FlatList
+        style={styles.flatList}
+        data={posts}
+        keyExtractor={(item, indx) => indx.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.containerList}>
+            <Image style={styles.imageList} source={{ uri: item.photo.localUri }} />
+            <Text style={styles.textList}>{item.comment}</Text>
+            <View style={styles.containerWrap}>
+              <TouchableOpacity
+                style={styles.containerWrap}
+                onPress={() => navigation.navigate("Коментарі",
+                  { comment: item.comment, id: item.id, uri: item.photo.localUri, nickName: item.nickName })}>
+                <Feather name="message-circle" size={18} color="#BDBDBD" />
+                <Text style={{ ...styles.wrapText, marginLeft: 5 }}>Коментарі</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.containerWrap}
+                onPress={() => navigation.navigate("Карта", { locationCoords: item.locationCoords })}>
+                <Feather name="map-pin" size={16} color="#BDBDBD" />
+                <Text style={{ ...styles.wrapText, marginLeft: 5 }}>{item.location.city}, {item.location.country}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      />
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
