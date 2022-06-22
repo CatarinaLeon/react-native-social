@@ -27,10 +27,7 @@ const CreateScreen = ({ navigation }) => {
   // console.log('photo=>', photo)
   // console.log('comment=>', comment)
   // console.log('location=>', location)
-  console.log('coords=>', coords)
-
-  // const text = JSON.stringify(location);
-  //     console.log('text', text)
+  // console.log('coords=>', coords)
   
   const { userId, nickName, email, avatar} = useSelector((state) => state.auth);
 
@@ -141,7 +138,9 @@ const CreateScreen = ({ navigation }) => {
       // console.log('location=>', location[0])
       setLocation(location[0]);
     })();
-  }, []);
+    }, []);
+  
+  // const handleDeleteButton = () => {setPhoto()}
 
   return (
     <View style={styles.container}>
@@ -187,7 +186,7 @@ const CreateScreen = ({ navigation }) => {
             </TouchableOpacity>
         </Camera>
         <TouchableOpacity onPress={openImagePickerAsync}>
-          <Text style={styles.photo}>Завантажити фото</Text>
+          <Text style={styles.textPhoto}>Завантажити фото</Text>
         </TouchableOpacity>
         <View style={styles.formContainer}>
           <TextInput
@@ -195,17 +194,19 @@ const CreateScreen = ({ navigation }) => {
             placeholder="Назва..."
             onChangeText={setComment}
           />
-          <TextInput
+          {/* <TextInput
             style={{ ...styles.input, marginTop: 32 }}
             placeholder="Місцевість..."
             onChangeText={setLocation}
-          />
+          /> */}
         </View>
         <TouchableOpacity onPress={sendPhoto} activeOpacity={0.8}>
           <Text style={styles.button}>Опублікувати</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity activeOpacity={0.9} style={styles.buttonDelete}>
+      <TouchableOpacity activeOpacity={0.9} style={styles.buttonDelete}
+      // onPress={()=>setPhoto()}
+      >
         <Feather name="trash-2" size={24} color="#DADADA" />
       </TouchableOpacity>
     </View>
@@ -218,12 +219,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "space-between",
     flexDirection: "column",
-    // alignItems: "center",
   },
   containerPhoto: {
     height:300,
   },
-    thumbnail: {
+  thumbnail: {
     width: 300,
     height: 300,
     resizeMode: "contain"
@@ -267,12 +267,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  photo: {
+  textPhoto: {
     marginHorizontal: 16,
     marginTop: 8,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
@@ -281,15 +280,13 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
   input: {
-    // marginTop: 32,
     marginHorizontal: 16,
     borderBottomColor: "#E8E8E8",
     borderBottomWidth: 1,
     padding: 10,
     textAlign: "left",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
@@ -301,9 +298,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 32,
     padding: 16,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",

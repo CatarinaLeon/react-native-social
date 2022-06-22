@@ -41,16 +41,8 @@ const PostsScreen = ({ navigation }) => {
       <View style={styles.containerImage}>
         <Image style={styles.image} source={{ uri: avatar }} />
         <View>
-          <Text style={styles.imageText}>{nickName}</Text>
-          <Text
-            style={{
-              ...styles.imageText,
-              fontWeight: "normal",
-              color: "rgba(33, 33, 33, 0.8)",
-            }}
-          >
-            {email}
-          </Text>
+          <Text style={styles.imageTextNick}>{nickName}</Text>
+          <Text style={styles.imageTextEmail}>{email}</Text>
         </View>
       </View>
       <FlatList
@@ -67,7 +59,7 @@ const PostsScreen = ({ navigation }) => {
                 onPress={() => navigation.navigate("Коментарі",
                   { comment: item.comment, id: item.id, uri: item.photo.localUri, nickName: item.nickName })}>
                 <Feather name="message-circle" size={18} color="#BDBDBD" />
-                <Text style={{ ...styles.wrapText, marginLeft: 5 }}>Коментарі</Text>
+                <Text style={{ ...styles.wrapText, marginLeft: 5, textDecorationLine:'none' }}>Коментарі</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.containerWrap}
@@ -101,13 +93,19 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginRight: 8,
   },
-  imageText: {
-    fontFamily: "Roboto",
+  imageTextNick: {
+    fontFamily: "Roboto-Bold",
     fontStyle: "normal",
-    fontWeight: "bold",
     fontSize: 13,
     lineHeight: 15,
     color: "#212121",
+  },
+  imageTextEmail: {
+    fontFamily: 'Roboto-Regular',
+    fontStyle: "normal",
+    fontSize: 11,
+    lineHeight: 13,
+    color: "rgba(33, 33, 33, 0.8)",
   },
   // flatList: {},
   containerList: {
@@ -121,7 +119,7 @@ const styles = StyleSheet.create({
   },
   textList: {
     marginBottom: 11,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Medium",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
@@ -132,11 +130,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   wrapText: {
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
+    textDecorationLine:'underline',
     color: "#212121",
   },
 });

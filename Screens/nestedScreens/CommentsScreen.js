@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   commentPhotoText: {
     marginLeft: 5,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Medium",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
@@ -158,12 +158,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
     borderRadius:6,
   },
-  // commentText: {},
+  commentText: {
+    fontFamily: 'Roboto-Regular',
+    fontStyle: 'normal',
+    fontSize: 13,
+    lineHeight: 18,
+    color:'#212121',
+  },
   commentData: {
-    textAlign: 'right',
     marginTop: 8,
+    fontFamily:'Roboto-Regular',
     fontSize: 10,
     lineHeight: 12,
+    textAlign: 'right',
     color:"#BDBDBD",
   },
 });

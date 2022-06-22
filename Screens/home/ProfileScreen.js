@@ -1,5 +1,5 @@
 import {useEffect,useState} from "react";
-import { View, Text, StyleSheet, Button,ImageBackground,FlatList, Image,TouchableOpacity,ScrollView } from "react-native";
+import { View, Text, StyleSheet, ImageBackground, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
 // import {  } from "react-native-web";
 import { useDispatch,useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
@@ -7,7 +7,7 @@ import { Feather, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { collection, query, where, getDocs, onSnapshot,docs, doc, updateDoc,increment  } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
-const ProfileScreen = ({ navigation, route }) => {
+const ProfileScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const [userPosts, setUserPosts] = useState([]);
@@ -57,7 +57,7 @@ const ProfileScreen = ({ navigation, route }) => {
               <Ionicons name="add-circle-outline" size={24} color="rgba(255, 108, 0, 1)" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.title}>{nickName}</Text>
+          <Text style={styles.titleNickName}>{nickName}</Text>
           <TouchableOpacity activeOpacity={0.9} style={styles.button} onPress={signOut}>
             <Feather name="log-out" size={24} color="#BDBDBD" />
           </TouchableOpacity>
@@ -73,15 +73,16 @@ const ProfileScreen = ({ navigation, route }) => {
                 <View style={styles.containerWrap}>
                   <View style={styles.containerLike}>
                     <TouchableOpacity
-                      style={styles.buttonLike}
+                      style={styles.buttonList}
                       onPress={() => navigation.navigate("Коментарі",
                       { comment: item.comment, id: item.id, uri: item.photo.localUri }
                     )}>
                       <Feather name="message-circle" size={18} color="#FF6C00" />
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={styles.buttonLike}
+                      style={styles.buttonList}
                       onPress={() => updateFieldLiked(item.id)}
+                      disabled={item.liked >= 1}
                     >
                       <FontAwesome
                         name={item.liked===0 ?"heart-o" : "heart" }
@@ -91,14 +92,17 @@ const ProfileScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity
-                    style={styles.buttonLike}
+                    style={styles.buttonList}
                     onPress={() => navigation.navigate("Карта", { locationCoords: item.locationCoords })}>
                     <Feather name="map-pin" size={18} color="#BDBDBD" />
-                    <Text style={styles.wrapText}>{item.location.country}</Text>
+                    <Text style={styles.textListLocation}>{item.location.country}</Text>
                   </TouchableOpacity>
                 </View>
-                <Text style={{ marginBottom: 8, marginTop: 5 }}>Подобається: {item.liked}</Text>
-                <Text style={styles.textList}>{item.nickName}: {item.comment}</Text>
+                <Text style={styles.textLiked}>Подобається: {item.liked}</Text>
+                <View style={{flexDirection:'row'}}>
+                  <Text style={styles.textListNick}>{item.nickName}:</Text>
+                  <Text style={styles.textListComment}>{item.comment}</Text>
+                </View>
               </View>
             )}
           />
@@ -153,13 +157,15 @@ const styles = StyleSheet.create({
     top: 65,
     right:6,
   },
-  title: {
+  titleNickName: {
     marginTop: 0,
     marginBottom: 30,
-    textAlign: 'center',
-    // fontWeight: 500,
+    fontFamily: 'Roboto-Medium',
+    fontStyle:'normal',
     fontSize: 30,
-    lineHeight:35,
+    lineHeight: 35,
+    textAlign: 'center',
+    letterSpacing: 0.01,
   },
     flatList: {
     paddingBottom: 64,
@@ -173,20 +179,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
-    textList: {
-    // marginBottom: 11,
-    fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontSize: 16,
-    lineHeight: 19,
-    color: "#212121",
-  },
+
   containerLike: {
     width: 50,
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  buttonLike: {
+  buttonList: {
     flexDirection: "row",
     height:20,
   },
@@ -194,15 +193,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  wrapText: {
-    marginLeft:5,
-    fontFamily: "Roboto",
-    fontStyle: "normal",
-    fontWeight: "normal",
+  textListLocation: {
+    marginLeft: 5,
+    fontFamily: "Roboto-Regular",
+    fontStyle: 'normal',
+    fontSize: 16,
+    lineHeight: 19,
+    textDecorationLine:'underline',
+    color: "#212121",
+  },
+  textLiked: {
+    marginBottom: 8,
+    marginTop: 5,
+    fontFamily: "Roboto-Medium",
+    fontStyle: 'normal',
+  },
+  textListNick: {
+    fontFamily: "Roboto-Medium",
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
   },
+  textListComment: {
+    marginLeft: 5,
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    },
 });
 
 export default ProfileScreen;
