@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
+
 import {
   StyleSheet,
   View,
@@ -12,8 +14,6 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 
-import { authSignInUser } from "../../redux/auth/authOperations";
-
 const initialState = {
   email: "",
   password: "",
@@ -25,7 +25,7 @@ export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    console.log("submit", state);
+    // console.log("submit", state);
     dispatch(authSignInUser(state));
     setstate(initialState);
   };
@@ -50,12 +50,12 @@ export default function LoginScreen({ navigation }) {
                 paddingBottom: isShowKeyboard ? 0 : 132,
               }}
             >
-              <Text style={styles.title}>Войти</Text>
+              <Text style={styles.title}>Увійти</Text>
               <View>
                 <TextInput
                   style={styles.input}
                   textAlign={"center"}
-                  placeholder="Адрес электронной почты"
+                  placeholder="Адреса електронної пошти"
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.email}
                   onChangeText={(value) =>
@@ -76,16 +76,16 @@ export default function LoginScreen({ navigation }) {
                 />
               </View>
               <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
-                <Text style={styles.button}>Войти</Text>
+                <Text style={styles.button}>Увійти</Text>
               </TouchableOpacity>
               <View>
                 <Text style={styles.btn}>
-                  Нет аккаунта?{" "}
+                  Немає облікового запису?{" "}
                   <Text
                     style={styles.btnText}
                     onPress={() => navigation.navigate("Register")}
                   >
-                    Зарегистрироваться
+                    Зареєструватись
                   </Text>
                 </Text>
               </View>
@@ -117,9 +117,8 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 33,
     textAlign: "center",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Bold",
     fontStyle: "normal",
-    fontWeight: "bold",
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.01,
@@ -136,9 +135,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
     textAlign: "left",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
@@ -150,17 +148,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 43,
     padding: 16,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
   },
   btn: {
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",

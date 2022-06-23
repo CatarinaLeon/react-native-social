@@ -51,6 +51,10 @@ export const useRoute = (isAuth) => {
       />
       <MainTab.Screen
         options={{
+          headerStyle: {
+            shadowColor: '#171717',
+            // shadowRadius: 3, shadowOpacity: 1, shadowOffset: { height: 1, width: 5 }
+          },
           headerTitleAlign: 'center',
           tabBarIcon: ({ focused }) => (
             <Ionicons

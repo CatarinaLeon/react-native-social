@@ -18,17 +18,20 @@ import * as ImagePicker from 'expo-image-picker';
 import { authSignUpUser } from "../../redux/auth/authOperations";
 import { Ionicons } from "@expo/vector-icons";
 
+// const avatarShablon = 
+
 const initialState = {
   nickName: "",
   email: "",
   password: "",
   avatar: 'https://i.trbna.com/preset/bi/e/92/47d9e624911ecbc6dc927ef034844.jpeg',
+  // avatar: require('../../assets/images/avatar.jpeg'),
 };
 
 export default function RegistrationScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  console.log('state', state)
+  // console.log('state', state)
 
   const dispatch = useDispatch();
   
@@ -89,12 +92,12 @@ const takePhotoAvatar = async () => {
                   <Ionicons name={state.avatar ? "close-circle-outline" : "add-circle-outline"} size={24} color="rgba(255, 108, 0, 1)" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.title}>Регистрация</Text>
+              <Text style={styles.title}>Реєстрація</Text>
               <View>
                 <TextInput
                   style={styles.input}
                   textAlign={"center"}
-                  placeholder="Логин"
+                  placeholder="Логін"
                   autoFocus={true}
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.nickName}
@@ -107,7 +110,7 @@ const takePhotoAvatar = async () => {
                 <TextInput
                   style={styles.input}
                   textAlign={"center"}
-                  placeholder="Адрес электронной почты"
+                  placeholder="Адреса електронної пошти"
                   onFocus={() => setIsShowKeyboard(true)}
                   value={state.email}
                   onChangeText={(value) =>
@@ -128,13 +131,13 @@ const takePhotoAvatar = async () => {
                 />
               </View>
               <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
-                <Text style={styles.button}>Зарегистрироваться</Text>
+                <Text style={styles.button}>Зареєструватись</Text>
               </TouchableOpacity>
               <View>
                 <Text style={styles.btn}>
-                  Уже есть аккаунт?{" "}
+                  Вже є обліковий запис?{" "}
                   <Text onPress={() => navigation.navigate("Login")}>
-                    Войти
+                    Увійти
                   </Text>
                 </Text>
               </View>
@@ -168,9 +171,8 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     marginTop: 0,
     textAlign: "center",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Bold",
     fontStyle: "normal",
-    fontWeight: "bold",
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.01,
@@ -187,9 +189,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderColor: "#E8E8E8",
     textAlign: "left",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
@@ -201,17 +202,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 43,
     padding: 16,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
   },
   btn: {
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontStyle: "normal",
-    fontWeight: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",

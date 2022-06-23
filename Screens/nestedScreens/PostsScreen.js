@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux'
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
 
-import { collection, onSnapshot,query } from "firebase/firestore"; 
+import { collection, onSnapshot,query, where } from "firebase/firestore"; 
 import { db } from "../../firebase/config";
 
 import { Feather } from "@expo/vector-icons";
@@ -10,11 +10,11 @@ import { Feather } from "@expo/vector-icons";
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   // console.log('posts', posts)
-  const { nickName, email, avatar } = useSelector((state) => state.auth)
+  const { nickName, email, avatar, userId } = useSelector((state) => state.auth)
 
   const getAllPost = async () => {
     // Прослуховувати документ за допомогою onSnapshot()
-    const q = await query(collection(db, "posts"));
+    const q = await query(collection(db, "posts"), where("userId", "==", userId));
     await onSnapshot(q, (data) => {
       setPosts(
         data.docs.map((doc) => {

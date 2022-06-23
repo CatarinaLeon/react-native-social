@@ -1,27 +1,26 @@
 import {useEffect,useState} from "react";
-import { View, Text, StyleSheet, ImageBackground, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
-// import {  } from "react-native-web";
 import { useDispatch,useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
+
+import { View, Text, StyleSheet, ImageBackground, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
 import { Feather, Ionicons, FontAwesome } from "@expo/vector-icons";
-import { collection, query, where, getDocs, onSnapshot,docs, doc, updateDoc,increment  } from "firebase/firestore";
+
+import { collection, query, where, onSnapshot, doc, updateDoc,increment } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 const ProfileScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-
   const [userPosts, setUserPosts] = useState([]);
   // console.log('userPost', userPosts)
-  // const [liked, setLiked] = useState();
-  // console.log('liked', liked)
-
-  const { userId, nickName, avatar} = useSelector((state) => state.auth);
+  
+  const dispatch = useDispatch();
+  
+  const { userId, nickName, avatar } = useSelector((state) => state.auth);
 
   const getUserPosts = async () => {
     const q = query(collection(db, "posts"), where("userId", "==", userId));
     // console.log('q', q)
     await onSnapshot(q, (data) => {
-    //  console.log('data', data)
+      //  console.log('data', data)
       setUserPosts(data.docs.map((doc) => {
         // console.log('doc', doc.data())
         return { ...doc.data(), id: doc.id }
@@ -30,11 +29,11 @@ const ProfileScreen = ({ navigation }) => {
   }
 
   const updateFieldLiked = async (id) => {
-    const postsRef = await doc(db,`posts/${id}`);
+    const postsRef = await doc(db, `posts/${id}`);
     // console.log("postsRef", postsRef);
     await updateDoc(postsRef, {
-        liked: increment(+1),
-  });
+      liked: increment(+1),
+    });
   }
 
   useEffect(() => {
@@ -52,10 +51,10 @@ const ProfileScreen = ({ navigation }) => {
         source={require("../../assets/images/PhotoBG.jpg")}>
         <View style={styles.form}>
           <View style={styles.avatarContainer}>
-            <Image style={styles.avatarImg} source={{uri: avatar}}/>
-            <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn}>
+            <Image style={styles.avatarImg} source={{ uri: avatar }} />
+            {/* <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn}>
               <Ionicons name="add-circle-outline" size={24} color="rgba(255, 108, 0, 1)" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <Text style={styles.titleNickName}>{nickName}</Text>
           <TouchableOpacity activeOpacity={0.9} style={styles.button} onPress={signOut}>
@@ -75,8 +74,8 @@ const ProfileScreen = ({ navigation }) => {
                     <TouchableOpacity
                       style={styles.buttonList}
                       onPress={() => navigation.navigate("Коментарі",
-                      { comment: item.comment, id: item.id, uri: item.photo.localUri }
-                    )}>
+                        { comment: item.comment, id: item.id, uri: item.photo.localUri }
+                      )}>
                       <Feather name="message-circle" size={18} color="#FF6C00" />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -85,7 +84,7 @@ const ProfileScreen = ({ navigation }) => {
                       disabled={item.liked >= 1}
                     >
                       <FontAwesome
-                        name={item.liked===0 ?"heart-o" : "heart" }
+                        name={item.liked === 0 ? "heart-o" : "heart"}
                         size={18}
                         color="#FF6C00"
                       />
@@ -99,7 +98,7 @@ const ProfileScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.textLiked}>Подобається: {item.liked}</Text>
-                <View style={{flexDirection:'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text style={styles.textListNick}>{item.nickName}:</Text>
                   <Text style={styles.textListComment}>{item.comment}</Text>
                 </View>

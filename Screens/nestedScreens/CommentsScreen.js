@@ -32,6 +32,7 @@ const CommentsScreen = ({ route }) => {
 
   const handleSubmit = () => {
     createPost();
+    setComments()
   };
 
   const getAllPosts = async () => {
@@ -76,7 +77,10 @@ const CommentsScreen = ({ route }) => {
         )}
       />
       <View >
-        <TextInput style={styles.input} placeholder="Коментувати..." onChangeText={setComments} />
+        <TextInput style={styles.input}
+          value={comments}
+          placeholder="Коментувати..."
+          onChangeText={setComments} />
         <TouchableOpacity onPress={handleSubmit} style={styles.sendBtn}>
           <AntDesign name="arrowup" size={20} color="#FFFFFF" />
         </TouchableOpacity>
