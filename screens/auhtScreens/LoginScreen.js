@@ -50,7 +50,7 @@ export default function LoginScreen({ navigation }) {
             <View
               style={{
                 ...styles.form,
-                paddingBottom: isShowKeyboard ? 390 : 250,
+                paddingBottom: isShowKeyboard ? 300 : 200,
               }}
             >
               <Text style={styles.title}>Увійти</Text>
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    minHeight: 820,
+    minHeight: 800,
     justifyContent:'flex-end',
   },
   form: {

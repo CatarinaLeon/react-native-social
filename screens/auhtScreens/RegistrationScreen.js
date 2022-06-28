@@ -79,7 +79,7 @@ const takePhotoAvatar = async () => {
           style={{...styles.image}}
           source={require("../../assets/images/PhotoBG.jpg")}
         >
-          <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 250 : 150 }}>
+          <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 200 : 150 }}>
             <View style={styles.avatarContainer}>
               <Image style={styles.avatarImg} source={{ uri: state.avatar }} />
               <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn} onPress={takePhotoAvatar}>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    minHeight: 820,
+    minHeight: 800,
     resizeMode: "center",
     justifyContent:'flex-end',
   },
