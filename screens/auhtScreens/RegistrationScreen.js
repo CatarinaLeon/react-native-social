@@ -74,67 +74,67 @@ const takePhotoAvatar = async () => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <KeyboardAwareScrollView>
-      <View style={styles.container}>
-        <ImageBackground
-          style={{...styles.image}}
-          source={require("../../assets/images/PhotoBG.jpg")}
-        >
-          <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 200 : 150 }}>
-            <View style={styles.avatarContainer}>
-              <Image style={styles.avatarImg} source={{ uri: state.avatar }} />
-              <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn} onPress={takePhotoAvatar}>
-                <Ionicons name="add-circle-outline" size={24} color="rgba(255, 108, 0, 1)" />
+        <View style={styles.container}>
+          <ImageBackground
+            style={{ ...styles.image }}
+            source={require("../../assets/images/PhotoBG.jpg")}
+          >
+            <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 200 : 150 }}>
+              <View style={styles.avatarContainer}>
+                <Image style={styles.avatarImg} source={{ uri: state.avatar }} />
+                <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn} onPress={takePhotoAvatar}>
+                  <Ionicons name="add-circle-outline" size={24} color="rgba(255, 108, 0, 1)" />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.title}>Реєстрація</Text>
+              <TextInput
+                style={{
+                  ...styles.input, marginBottom: 16,
+                  borderColor: isInputStyleNick ? '#FF6C00' : '#E8E8E8'
+                }}
+                placeholder="Логін"
+                // autoFocus={true}
+                selectTextOnFocus={true}
+                onFocus={() => { setIsInputStyleNick(true); setIsShowKeyboard(true) }}
+                onBlur={() => setIsInputStyleNick()}
+                value={state.nickName}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, nickName: value }))
+                }
+              />
+              <TextInput
+                style={{ ...styles.input, marginBottom: 16, borderColor: isInputStyleMail ? '#FF6C00' : '#E8E8E8' }}
+                placeholder="Адреса електронної пошти"
+                onFocus={() => { setIsInputStyleMail(true); setIsShowKeyboard(true) }}
+                onBlur={() => setIsInputStyleMail()}
+                value={state.email}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
+              />
+              <TextInput
+                style={{ ...styles.input, borderColor: isInputStylePassword ? '#FF6C00' : '#E8E8E8' }}
+                placeholder="Пароль"
+                secureTextEntry={true}
+                onFocus={() => { setIsInputStylePassword(true); setIsShowKeyboard(true) }}
+                onBlur={() => setIsInputStylePassword()}
+                value={state.password}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, password: value }))
+                }
+              />
+              <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
+                <Text style={styles.button}>Зареєструватись</Text>
               </TouchableOpacity>
+              <Text style={styles.btn}>
+                Вже є обліковий запис?{" "}
+                <Text onPress={() => navigation.navigate("Login")}>
+                  Увійти
+                </Text>
+              </Text>
             </View>
-            <Text style={styles.title}>Реєстрація</Text>
-            <TextInput
-              style={{
-                ...styles.input, marginBottom: 16,
-                borderColor: isInputStyleNick ? '#FF6C00' : '#E8E8E8'
-              }}
-              placeholder="Логін"
-              // autoFocus={true}
-              selectTextOnFocus={true}
-              onFocus={() => { setIsInputStyleNick(true); setIsShowKeyboard(true)}}
-              onBlur={()=>setIsInputStyleNick()}
-              value={state.nickName}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, nickName: value }))
-              }
-            />
-            <TextInput
-              style={{ ...styles.input, marginBottom: 16, borderColor: isInputStyleMail ?  '#FF6C00': '#E8E8E8'}}
-              placeholder="Адреса електронної пошти"
-              onFocus={() => { setIsInputStyleMail(true); setIsShowKeyboard(true)}}
-              onBlur={()=>setIsInputStyleMail()}
-              value={state.email}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, email: value }))
-              }
-            />
-            <TextInput
-              style={{...styles.input, borderColor: isInputStylePassword ?  '#FF6C00': '#E8E8E8'}}
-              placeholder="Пароль"
-              secureTextEntry={true}
-              onFocus={() => { setIsInputStylePassword(true); setIsShowKeyboard(true)}}
-              onBlur={()=>setIsInputStylePassword()}
-              value={state.password}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, password: value }))
-              }
-            />
-            <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
-              <Text style={styles.button}>Зареєструватись</Text>
-            </TouchableOpacity>
-            <Text style={styles.btn}>
-              Вже є обліковий запис?{" "}
-              <Text onPress={() => navigation.navigate("Login")}>
-                Увійти
-              </Text>
-              </Text>
-          </View>
-        </ImageBackground>
-      </View>
+          </ImageBackground>
+        </View>
       </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );

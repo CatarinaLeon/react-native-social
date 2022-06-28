@@ -41,64 +41,65 @@ export default function LoginScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <KeyboardAwareScrollView>
-      <View style={styles.container}>
-        <ImageBackground
-          style={styles.image}
-          source={require("../../assets/images/PhotoBG.jpg")}
-        >
-          <KeyboardAvoidingView>
-            <View
-              style={{
-                ...styles.form,
-                paddingBottom: isShowKeyboard ? 300 : 200,
-              }}
-            >
-              <Text style={styles.title}>Увійти</Text>
+        <View style={styles.container}>
+          <ImageBackground
+            style={styles.image}
+            source={require("../../assets/images/PhotoBG.jpg")}
+          >
+            <KeyboardAvoidingView>
+              <View
+                style={{
+                  ...styles.form,
+                  paddingBottom: isShowKeyboard ? 300 : 200,
+                }}
+              >
+                <Text style={styles.title}>Увійти</Text>
                 <TextInput
-                  style={{...styles.input, marginBottom: 16, borderColor: isInputStyleMail ?  '#FF6C00': '#E8E8E8' }}
+                  style={{ ...styles.input, marginBottom: 16, borderColor: isInputStyleMail ? '#FF6C00' : '#E8E8E8' }}
                   textAlign={"center"}
                   placeholder="Адреса електронної пошти"
-                  onFocus={() => { setIsInputStyleMail(true); setIsShowKeyboard(true)}}
-                  onBlur={()=>setIsInputStyleMail()}
+                  onFocus={() => { setIsInputStyleMail(true); setIsShowKeyboard(true) }}
+                  onBlur={() => setIsInputStyleMail()}
                   value={state.email}
                   onChangeText={(value) =>
                     setState((prevState) => ({ ...prevState, email: value }))
                   }
                 />
                 <TextInput
-                  style={{...styles.input, borderColor: isInputStylePassword ?  '#FF6C00': '#E8E8E8'}}
+                  style={{ ...styles.input, borderColor: isInputStylePassword ? '#FF6C00' : '#E8E8E8' }}
                   textAlign={"center"}
                   placeholder="Пароль"
                   secureTextEntry={true}
-                  onFocus={() => { setIsInputStylePassword(true); setIsShowKeyboard(true)}}
-                  onBlur={()=>setIsInputStylePassword()}
+                  onFocus={() => { setIsInputStylePassword(true); setIsShowKeyboard(true) }}
+                  onBlur={() => setIsInputStylePassword()}
                   value={state.password}
                   onChangeText={(value) =>
                     setState((prevState) => ({ ...prevState, password: value }))
                   }
                 />
-              <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
-                <Text style={styles.button}>Увійти</Text>
-              </TouchableOpacity>
-              <View>
-                <Text style={styles.btn}>
-                  Немає облікового запису?{" "}
-                  <Text
-                    style={styles.btnText}
-                    onPress={() => navigation.navigate("Register")}
-                  >
-                    Зареєструватись
+                <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
+                  <Text style={styles.button}>Увійти</Text>
+                </TouchableOpacity>
+                <View>
+                  <Text style={styles.btn}>
+                    Немає облікового запису?{" "}
+                    <Text
+                      style={styles.btnText}
+                      onPress={() => navigation.navigate("Register")}
+                    >
+                      Зареєструватись
+                    </Text>
                   </Text>
-                </Text>
+                </View>
               </View>
-            </View>
-          </KeyboardAvoidingView>
-        </ImageBackground>
+            </KeyboardAvoidingView>
+          </ImageBackground>
         </View>
       </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
-}
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
