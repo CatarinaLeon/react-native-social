@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import RegistrationScreen from "../Screens/auht/RegistrationScreen";
-import LoginScreen from "../Screens/auht/LoginScreen";
-import HomeScreen from "../Screens/home/HomeScreen";
-import CreateScreen from "../Screens/home/CreatePostsScreen";
-import ProfileScreen from "../Screens/home/ProfileScreen";
+import RegistrationScreen from "../screens/auhtScreens/RegistrationScreen";
+import LoginScreen from "../screens/auhtScreens/LoginScreen";
+import HomeScreen from "../screens/mainScreens/HomeScreen";
+import CreateScreen from "../screens/mainScreens/CreatePostsScreen";
+import ProfileScreen from "../screens/mainScreens/ProfileScreen";
 
 import {SimpleLineIcons, Ionicons, Feather} from "@expo/vector-icons";
 

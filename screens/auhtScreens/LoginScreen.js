@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authSignInUser } from "../../redux/auth/authOperations";
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
   StyleSheet,
   View,
@@ -20,61 +20,63 @@ const initialState = {
 };
 
 export default function LoginScreen({ navigation }) {
+  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [state, setstate] = useState(initialState);
+  const [isInputStyleMail, setIsInputStyleMail] = useState(false);
+  const [isInputStylePassword, setIsInputStylePassword] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
     // console.log("submit", state);
     dispatch(authSignInUser(state));
-    setstate(initialState);
+    setState(initialState);
   };
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
   };
+
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
+      <KeyboardAwareScrollView>
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
           source={require("../../assets/images/PhotoBG.jpg")}
         >
-          <KeyboardAvoidingView
-          // behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
+          <KeyboardAvoidingView>
             <View
               style={{
                 ...styles.form,
-                paddingBottom: isShowKeyboard ? 0 : 132,
+                paddingBottom: isShowKeyboard ? 390 : 250,
               }}
             >
               <Text style={styles.title}>Увійти</Text>
-              <View>
                 <TextInput
-                  style={styles.input}
+                  style={{...styles.input, marginBottom: 16, borderColor: isInputStyleMail ?  '#FF6C00': '#E8E8E8' }}
                   textAlign={"center"}
                   placeholder="Адреса електронної пошти"
-                  onFocus={() => setIsShowKeyboard(true)}
+                  onFocus={() => { setIsInputStyleMail(true); setIsShowKeyboard(true)}}
+                  onBlur={()=>setIsInputStyleMail()}
                   value={state.email}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, email: value }))
+                    setState((prevState) => ({ ...prevState, email: value }))
                   }
                 />
-              </View>
-              <View style={styles.formCont}>
                 <TextInput
-                  style={styles.input}
+                  style={{...styles.input, borderColor: isInputStylePassword ?  '#FF6C00': '#E8E8E8'}}
                   textAlign={"center"}
                   placeholder="Пароль"
-                  onFocus={() => setIsShowKeyboard(true)}
+                  secureTextEntry={true}
+                  onFocus={() => { setIsInputStylePassword(true); setIsShowKeyboard(true)}}
+                  onBlur={()=>setIsInputStylePassword()}
                   value={state.password}
                   onChangeText={(value) =>
-                    setstate((prevState) => ({ ...prevState, password: value }))
+                    setState((prevState) => ({ ...prevState, password: value }))
                   }
                 />
-              </View>
               <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit}>
                 <Text style={styles.button}>Увійти</Text>
               </TouchableOpacity>
@@ -92,7 +94,8 @@ export default function LoginScreen({ navigation }) {
             </View>
           </KeyboardAvoidingView>
         </ImageBackground>
-      </View>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -102,16 +105,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "flex-end",
+    width: "100%",
+    minHeight: 820,
+    justifyContent:'flex-end',
   },
   form: {
     backgroundColor: "#FFFFFF",
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     paddingTop: 32,
-    marginBottom: 0,
+    // marginBottom: 0,
   },
 
   title: {
@@ -123,9 +126,6 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     letterSpacing: 0.01,
     color: "#212121",
-  },
-  formCont: {
-    marginTop: 16,
   },
   input: {
     padding: 16,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     textAlign: "center",
     marginHorizontal: 16,
-    marginTop: 43,
+    marginTop: 40,
     padding: 16,
     fontFamily: "Roboto-Regular",
     fontStyle: "normal",
