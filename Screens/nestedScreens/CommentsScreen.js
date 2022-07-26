@@ -14,7 +14,6 @@ const CommentsScreen = ({ route }) => {
   // console.log('id', id)
 
   const screenWidth = useWindowDimensions().width;
-  // console.log('screenWidth', screenWidth)
   
   const [comments, setComments] = useState('')
   const [allComments, setAllComments] = useState([]);

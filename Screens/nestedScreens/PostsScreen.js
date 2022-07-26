@@ -9,7 +9,7 @@ import { Feather } from "@expo/vector-icons";
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  // console.log('posts', posts)
+  
   const { nickName, email, avatar, userId } = useSelector((state) => state.auth)
 
   const getAllPost = async () => {
