@@ -10,9 +10,7 @@ const HomeScreen = () => {
   return (
     <NestedScreen.Navigator options={{}}>
       <NestedScreen.Screen name="PostsScreen" component={PostsScreen}
-        options={{
-          title: 'Публікації', headerTitleAlign: 'center',
-        }}
+        options={{title: 'Публікації', headerTitleAlign: 'center'}}
       />
       <NestedScreen.Screen name="Коментарі" component={CommentsScreen} options={{headerTitleAlign:'center'}}/>
       <NestedScreen.Screen name="Карта" component={MapScreen} options={{headerTitleAlign:'center'}}/>
