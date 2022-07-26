@@ -39,7 +39,7 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     getUserPosts()
     // console.log('getUserPosts()', getUserPosts())
-  }, [])
+  }, [userId])
 
   const signOut = () => {
     dispatch(authSignOutUser());
@@ -74,7 +74,7 @@ const ProfileScreen = ({ navigation }) => {
                     <TouchableOpacity
                       style={styles.buttonList}
                       onPress={() => navigation.navigate("Коментарі",
-                        { comment: item.comment, id: item.id, uri: item.photo.localUri }
+                        { comment: item.comment, id: item.id, uri: item.photo.localUri, nickName: item.nickName, }
                       )}>
                       <Feather name="message-circle" size={18} color="#FF6C00" />
                     </TouchableOpacity>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
     image: {
     width: "100%",
-    height: "100%",
+    minHeight: 680,
     backgroundPosition: "center",
     resizeMode: "cover",
   },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     top:10,
   },
   avatarContainer: {
-    // backgroundColor: "#f6f6f6",
+    backgroundColor: "#f6f6f6",
     width: 120,
     height: 120,
     borderRadius: 16,
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   avatarImg: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     borderRadius: 16,
   },
   avatarBtn: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     right:6,
   },
   titleNickName: {
-    marginTop: 0,
+    marginTop: 20,
     marginBottom: 30,
     fontFamily: 'Roboto-Medium',
     fontStyle:'normal',

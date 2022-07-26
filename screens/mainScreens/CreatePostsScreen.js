@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import {
   View,
@@ -8,8 +8,7 @@ import {
   TextInput,
   Image,Modal
 } from "react-native";
-// import { TouchableOpacity } from "react-native-gesture-handler";
-import { Camera, CameraType, takePictureAsync } from "expo-camera";
+import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from "expo-location";
 import { FontAwesome, MaterialCommunityIcons, Feather, AntDesign } from "@expo/vector-icons";
@@ -19,6 +18,7 @@ import {storage, db} from "../../firebase/config";
 
 
 const CreateScreen = ({ navigation }) => {
+  const cameraRef = useRef();
   // const [cameraRef, setCameraRef] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
@@ -28,10 +28,12 @@ const CreateScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(CameraType.back);
   // console.log('cameralll', cameraRef)
-  // console.log('photo=>', photo)
+  console.log('photo=>', photo)
   // console.log('comment=>', comment)
   // console.log('location=>', location)
   // console.log('coords=>', coords)
+  console.log('hasPermission', hasPermission)
+  console.log('type', type)
   
   const { userId, nickName, email, avatar } = useSelector((state) => state.auth);
 
@@ -50,50 +52,18 @@ const CreateScreen = ({ navigation }) => {
     setModalVisible(true);
   }
 
-  // const takePhoto = async () => {
-  //   //  const file = await takePictureAsync();
-  //   // if (photo) {
-  //   //   console.log('camerallll', photo)
-  //     // const file = await photo.takePictureAsync();
-  //     // console.log('file', file)
-  //     // setPhoto(file.uri);
-  //     // setModalVisible(true);
-  //   // }
-  // };
+  const takePhoto = async () => {
+    let options = {
+      quality: 1,
+      base64: true,
+      exif: false
+    };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await Camera.getCameraPermissionsAsync();
-  //     setHasPermission(status === 'granted');
-  //     console.log('status', status)
-  //   })();
-  // }, []);
+    const newPhoto = await cameraRef.current.takePictureAsync(options);
+    console.log('newPhoto', newPhoto)
+    setPhoto(newPhoto);
+  };
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-      console.log('status', status)
-    })();
-  }, []);
-
-  // if (hasPermission === null) {
-  //   return <View />;
-  // }
-  // if (hasPermission === false) {
-  //   return <Text>Нет доступа к камере</Text>;
-  // }
-
-  // const takePhoto = async () => {
-  //   // const { uri } = await FileSystem.getInfoAsync()
-  //   console.log('uri', FileSystem.readAsStringAsync())
-  //   // const { uri } = await camera.takePictureAsync();
-  //   // const location = await Location.getCurrentPositionAsync();
-  //     // console.log('Camera.takePictureAsync()----->',camera.takePictureAsync())
-  //   // setPhoto(uri)
-  // }
-
-  
   // Створення колекції Post
   const uploadPostToServer = async () => {
     await uploadPhotoToStorage();
@@ -160,17 +130,33 @@ const CreateScreen = ({ navigation }) => {
     setModalVisible()
   }
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+      console.log('status', status)
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+
+  if (hasPermission === false) {
+    return <Text>Нет доступа к камере</Text>;
+  }
+
   return (
     <View style={styles.container}>
       {!modalVisible ? (
         <>
           <Camera style={styles.camera}
             // ref={(ref) => setPhoto(ref)}
-            // ref={setCamera}
+            ref={cameraRef}
             type={type}
           >
             <TouchableOpacity
-              // onPress={takePhoto}
+              onPress={takePhoto}
               style={styles.buttonSnap}
             >
               <FontAwesome
@@ -183,9 +169,9 @@ const CreateScreen = ({ navigation }) => {
               style={styles.cameraType}
               onPress={() => {
                 setType(
-                  type === Camera.Constants.Type.back
-                    ? Camera.Constants.Type.front
-                    : Camera.Constants.Type.back
+                  type === CameraType.back
+                    ? CameraType.front
+                    : CameraType.back
                 );
               }}
             >

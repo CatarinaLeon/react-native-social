@@ -40,19 +40,14 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <KeyboardAwareScrollView>
+      {/* <KeyboardAwareScrollView> */}
         <View style={styles.container}>
           <ImageBackground
             style={styles.image}
             source={require("../../assets/images/PhotoBG.jpg")}
           >
             <KeyboardAvoidingView>
-              <View
-                style={{
-                  ...styles.form,
-                  paddingBottom: isShowKeyboard ? 300 : 200,
-                }}
-              >
+              <View style={{...styles.form,paddingBottom: isShowKeyboard ? 280 : 150}} >
                 <Text style={styles.title}>Увійти</Text>
                 <TextInput
                   style={{ ...styles.input, marginBottom: 16, borderColor: isInputStyleMail ? '#FF6C00' : '#E8E8E8' }}
@@ -95,7 +90,7 @@ export default function LoginScreen({ navigation }) {
             </KeyboardAvoidingView>
           </ImageBackground>
         </View>
-      </KeyboardAwareScrollView>
+      {/* </KeyboardAwareScrollView> */}
     </TouchableWithoutFeedback>
   );
 };

@@ -14,9 +14,7 @@ const PostsScreen = ({ navigation }) => {
 
   const getAllPost = async () => {
     // Прослуховувати документ за допомогою onSnapshot()
-    const q = await query(collection(db, "posts")
-      // , where("email", "==", email)
-    );
+    const q = await query(collection(db, "posts"), where("userId", "==", userId));
     await onSnapshot(q, (data) => {
       setPosts(
         data.docs.map((doc) => {
@@ -36,7 +34,7 @@ const PostsScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllPost()
-  }, []);
+  }, [userId]);
   
   return (
     <View style={styles.container}>

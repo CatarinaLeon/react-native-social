@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch} from "react-redux";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
   StyleSheet,
   View,
@@ -10,9 +10,8 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Dimensions,
-  Image, ScrollView
+  Image
 } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { authSignUpUser } from "../../redux/auth/authOperations";
@@ -42,7 +41,6 @@ const takePhotoAvatar = async () => {
       return;
     }
     setState({...initialState, avatar: pickerAvatar.uri});
-    
   }
 
   const [dimensions, setdimensions] = useState(
@@ -73,13 +71,13 @@ const takePhotoAvatar = async () => {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      <KeyboardAwareScrollView>
+      {/* <KeyboardAwareScrollView> */}
         <View style={styles.container}>
           <ImageBackground
             style={{ ...styles.image }}
             source={require("../../assets/images/PhotoBG.jpg")}
           >
-            <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 200 : 150 }}>
+            <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 280 : 150 }}>
               <View style={styles.avatarContainer}>
                 <Image style={styles.avatarImg} source={{ uri: state.avatar }} />
                 <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn} onPress={takePhotoAvatar}>
@@ -135,7 +133,7 @@ const takePhotoAvatar = async () => {
             </View>
           </ImageBackground>
         </View>
-      </KeyboardAwareScrollView>
+      {/* </KeyboardAwareScrollView> */}
     </TouchableWithoutFeedback>
   );
 };

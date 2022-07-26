@@ -1,13 +1,16 @@
-import { View, Text, StyleSheet,TextInput, TouchableOpacity,Image,SafeAreaView,
-  FlatList } from "react-native";
-import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
-import { AntDesign } from '@expo/vector-icons';
+import { useSelector } from 'react-redux'
+
+import { View, Text, StyleSheet,TextInput, TouchableOpacity,Image,SafeAreaView,
+  FlatList} from "react-native";
+
 import { db } from '../../firebase/config'
 import { collection, doc, setDoc, query, onSnapshot } from "firebase/firestore";
 
+import { AntDesign } from '@expo/vector-icons';
+
 const CommentsScreen = ({ route }) => {
-  const { id, uri, comment } = route.params
+  const { id, comment, nickName } = route.params
   // console.log('id', id)
 
   const [comments, setComments] = useState('')
@@ -20,7 +23,7 @@ const CommentsScreen = ({ route }) => {
   const nowDate = new Date().toLocaleDateString();
   // console.log(nowDate);
 
-  const createPost = async () => {
+  const createCommentsOnPosts = async () => {
     const createComments = await doc(collection(db, `posts/${id}/comments`))
     // console.log('createComments', createComments)
     await setDoc(createComments, {
@@ -31,7 +34,7 @@ const CommentsScreen = ({ route }) => {
   }
 
   const handleSubmit = () => {
-    createPost();
+    createCommentsOnPosts();
     setComments()
   };
 
@@ -55,27 +58,28 @@ const CommentsScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <View style={styles.photoContainer}>
-        <Image
-          style={styles.commentPhoto}
-          source={{ uri }} />
-        <Text style={styles.commentPhotoText}>{comment}</Text>
+        <Text style={styles.commentPhotoText}>{nickName}:</Text>
+        <Text style={{ ...styles.commentPhotoText, marginLeft: 8, }}>{comment}</Text>
       </View>
-      <FlatList
-        style={styles.flatList}
-        data={allComments}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <>
-            <View style={styles.commentContainer}>
-              <Image style={styles.commentAvatar} source={{ uri: item.avatar }} />
-              <View style={styles.commentContText}>
-                <Text style={styles.commentText}>{item.comment}</Text>
-                <Text style={styles.commentData}>{item.date}</Text>
+      {allComments.length === 0 ? (
+        <Text style={styles.textComment}>Коментарів поки немає</Text>
+      ) : (
+        <FlatList
+          style={styles.flatList}
+          data={allComments}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <>
+              <View style={styles.commentContainer}>
+                <Image style={styles.commentAvatar} source={{ uri: item.avatar }} />
+                <View style={styles.commentContText}>
+                  <Text style={styles.commentText}>{item.comment}</Text>
+                  <Text style={styles.commentData}>{item.date}</Text>
+                </View>
               </View>
-            </View>
-          </>
-        )}
-      />
+            </>
+          )}
+        />)}
       <View >
         <TextInput style={styles.input}
           value={comments}
@@ -97,16 +101,18 @@ const styles = StyleSheet.create({
     backgroundColor:'#FFFFFF',
   },
   photoContainer: {
-    height: 240,
-    borderRadius: 8,
+    flexDirection: 'row',
   },
-  commentPhoto: {
-    height: 240,
-    borderRadius: 8,
-    marginBottom:10,
+  textComment: {
+    fontFamily: "Roboto-Medium",
+    fontStyle: "normal",
+    fontSize: 22,
+    lineHeight: 18,
+    color: "#BDBDBD",
+    textAlign: 'center',
+    padding: 60,
   },
   commentPhotoText: {
-    marginLeft: 5,
     fontFamily: "Roboto-Medium",
     fontStyle: "normal",
     fontSize: 16,
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   flatList: {
-    marginTop:40,
+    marginTop:20,
   },
   input: {
     marginTop:16,
