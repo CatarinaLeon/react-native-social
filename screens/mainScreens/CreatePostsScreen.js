@@ -1,17 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Image,Modal
-} from "react-native";
+
+import { View,Text,StyleSheet,TouchableOpacity,TextInput,
+  Image,Modal,useWindowDimensions } from "react-native";
+  
 import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from "expo-location";
-import { FontAwesome, MaterialCommunityIcons, Feather, AntDesign } from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { collection, setDoc, doc } from "firebase/firestore"; 
 import {storage, db} from "../../firebase/config";
@@ -27,14 +24,11 @@ const CreateScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(CameraType.back);
-  // console.log('cameralll', cameraRef)
-  console.log('photo=>', photo)
-  // console.log('comment=>', comment)
-  // console.log('location=>', location)
-  // console.log('coords=>', coords)
-  console.log('hasPermission', hasPermission)
-  console.log('type', type)
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  // console.log('photo=>', photo)
   
+  const screenHeight = useWindowDimensions().height;
+
   const { userId, nickName, email, avatar } = useSelector((state) => state.auth);
 
   const openImagePickerAsync = async () => {
@@ -61,7 +55,7 @@ const CreateScreen = ({ navigation }) => {
 
     const newPhoto = await cameraRef.current.takePictureAsync(options);
     console.log('newPhoto', newPhoto)
-    setPhoto(newPhoto);
+    setPhoto({ localUri: newPhoto.uri });
   };
 
   // Створення колекції Post
@@ -196,10 +190,10 @@ const CreateScreen = ({ navigation }) => {
           <>
             <View style={styles.takePhotoContainer}>
               {photo && (
-                <View style={{ height: 300 }}>
+                <View style={{ height: (screenHeight - 400) }}>
                   <Image
                     source={{ uri: photo.localUri }}
-                    style={{ height: 300, width: 'auto' }}
+                    style={{ height: (screenHeight - 400), width: 'auto' }}
                   />
                 </View>
               )}
@@ -211,29 +205,24 @@ const CreateScreen = ({ navigation }) => {
                 placeholder="Назва..."
                 onChangeText={setComment}
               />
-              {/* <TextInput
-            style={{ ...styles.input, marginTop: 32 }}
-            placeholder="Місцевість..."
-            onChangeText={setLocation}
-          /> */}
-            </View>
-            <TouchableOpacity onPress={sendPhoto} activeOpacity={0.8}
-              disabled={comment ? false : true}
-            >
-              <Text
-                style={{
-                  ...styles.buttonPublish,
-                  backgroundColor: comment ? '#FF6C00' : "#F6F6F6",
-                  color: comment ? '#FFFFFF' : "#BDBDBD",
-                }}
-              >Опублікувати</Text>
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.9} style={styles.buttonDelete}
-              onPress={handleDeleteButton}
+            
+              <TouchableOpacity onPress={sendPhoto} activeOpacity={0.8}
+                disabled={comment ? false : true}
               >
-              <AntDesign name="close" size={24} color="#DADADA" />
-              {/* <Feather name="trash-2" size={24} color="#DADADA" /> */}
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    ...styles.buttonPublish,
+                    backgroundColor: comment ? '#FF6C00' : "#F6F6F6",
+                    color: comment ? '#FFFFFF' : "#BDBDBD",
+                  }}
+                >Опублікувати</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.9} style={styles.buttonDelete}
+                onPress={handleDeleteButton}
+              >
+                <AntDesign name="close" size={24} color="#DADADA" />
+              </TouchableOpacity>
+            </View>
           </>
         </Modal>
       )}
@@ -275,7 +264,6 @@ const styles = StyleSheet.create({
     zIndex:20,
   },
   takePhotoContainer: {
-    height: 290,
     marginHorizontal: 16,
     marginTop: 80,
   },

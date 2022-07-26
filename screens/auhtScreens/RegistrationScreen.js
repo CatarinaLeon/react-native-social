@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch} from "react-redux";
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { authSignUpUser } from "../../redux/auth/authOperations";
+
 import {
   StyleSheet,
   View,
@@ -10,30 +11,37 @@ import {
   TextInput,
   Text,
   TouchableOpacity,
-  Dimensions,
-  Image
+  useWindowDimensions,
+  Image, Dimensions
 } from "react-native";
+
 import * as ImagePicker from 'expo-image-picker';
-import { authSignUpUser } from "../../redux/auth/authOperations";
 import { Ionicons } from "@expo/vector-icons";
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const initialState = {
   nickName: "",
   email: "",
   password: "",
   avatar: 'https://i.trbna.com/preset/bi/e/92/47d9e624911ecbc6dc927ef034844.jpeg',
-  // avatar:  '../../assets/images/avatar.jpeg',
 };
 
 export default function RegistrationScreen({ navigation }) {
-  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isInputStyleNick, setIsInputStyleNick] = useState(false);
   const [isInputStyleMail, setIsInputStyleMail] = useState(false);
   const [isInputStylePassword, setIsInputStylePassword] = useState(false);
 
   const dispatch = useDispatch();
-  
+
+  const screenHeight = useWindowDimensions().height;
+  // const heightH = Dimensions.get('window').height;
+  // console.log('heightH', heightH)
+  // const [dimensions, setdimensions] = useState(
+  //   Dimensions.get("window").width - 16 * 2
+  // );
+
 const takePhotoAvatar = async () => {
     const pickerAvatar = await ImagePicker.launchImageLibraryAsync();
     // console.log("pickerAvatar---->", pickerAvatar);
@@ -42,23 +50,6 @@ const takePhotoAvatar = async () => {
     }
     setState({...initialState, avatar: pickerAvatar.uri});
   }
-
-  const [dimensions, setdimensions] = useState(
-    Dimensions.get("window").width - 16 * 2
-  );
-
-  
-  // useEffect(() => {
-  //   const onChange = () => {
-  //     const width = Dimensions.get("window").width - 16 * 2;
-
-  //     setdimensions(width);
-  //   };
-  //   Dimensions.addEventListener("change", onChange);
-  //   return () => {
-  //     Dimensions.remove("change", onChange);
-  //   };
-  // }, []);
 
   const handleSubmit = () => {
     dispatch(authSignUpUser(state));
@@ -71,13 +62,15 @@ const takePhotoAvatar = async () => {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      {/* <KeyboardAwareScrollView> */}
         <View style={styles.container}>
           <ImageBackground
-            style={{ ...styles.image }}
+          style={{
+            ...styles.image,
+            height: (screenHeight + 120)
+          }}
             source={require("../../assets/images/PhotoBG.jpg")}
           >
-            <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 280 : 150 }}>
+          <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 280 : 150,}}>
               <View style={styles.avatarContainer}>
                 <Image style={styles.avatarImg} source={{ uri: state.avatar }} />
                 <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn} onPress={takePhotoAvatar}>
@@ -129,11 +122,10 @@ const takePhotoAvatar = async () => {
                 <Text onPress={() => navigation.navigate("Login")}>
                   Увійти
                 </Text>
-              </Text>
+            </Text>
             </View>
           </ImageBackground>
         </View>
-      {/* </KeyboardAwareScrollView> */}
     </TouchableWithoutFeedback>
   );
 };
@@ -145,7 +137,6 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    minHeight: 800,
     resizeMode: "center",
     justifyContent:'flex-end',
   },

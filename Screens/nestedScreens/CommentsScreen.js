@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { View, Text, StyleSheet,TextInput, TouchableOpacity,Image,SafeAreaView,
+import { View, Text, StyleSheet,TextInput, TouchableOpacity,Image,useWindowDimensions,
   FlatList} from "react-native";
 
 import { db } from '../../firebase/config'
@@ -13,10 +13,11 @@ const CommentsScreen = ({ route }) => {
   const { id, comment, nickName } = route.params
   // console.log('id', id)
 
+  const screenWidth = useWindowDimensions().width;
+  // console.log('screenWidth', screenWidth)
+  
   const [comments, setComments] = useState('')
-  // console.log('comments=>', comments)
   const [allComments, setAllComments] = useState([]);
-  // console.log('allComment s=>', allComments)
 
   const { avatar } = useSelector((state) => state.auth)
 
@@ -72,7 +73,7 @@ const CommentsScreen = ({ route }) => {
             <>
               <View style={styles.commentContainer}>
                 <Image style={styles.commentAvatar} source={{ uri: item.avatar }} />
-                <View style={styles.commentContText}>
+                <View style={{ ...styles.commentContText, width: screenWidth - 75 }}>
                   <Text style={styles.commentText}>{item.comment}</Text>
                   <Text style={styles.commentData}>{item.date}</Text>
                 </View>
@@ -85,7 +86,7 @@ const CommentsScreen = ({ route }) => {
           value={comments}
           placeholder="Коментувати..."
           onChangeText={setComments} />
-        <TouchableOpacity onPress={handleSubmit} style={styles.sendBtn}>
+        <TouchableOpacity onPress={handleSubmit} style={{ ...styles.sendBtn, left: screenWidth - 80 }}>
           <AntDesign name="arrowup" size={20} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
     marginTop:20,
   },
   input: {
+    position:'relative',
     marginTop:16,
     padding:16,
     height: 50,
@@ -134,7 +136,6 @@ const styles = StyleSheet.create({
   sendBtn: {
     position: 'absolute',
     bottom: 7,
-    left:333,
     height: 35,
     width: 35,
     backgroundColor:'#FF6C00',
@@ -152,18 +153,10 @@ const styles = StyleSheet.create({
   commentAvatar: {
     width: 28,
     height: 28,
-    borderRadius:50,
-  },
-  commentNick: {
-    marginRight:16,
-    height: 28,
-    width: 28,
-    borderWidth: 1,
-    borderRadius:50,
-    borderColor: 'red',
+    borderRadius: 50,
+    backgroundColor: 'rgba(0, 0, 0, 0.03)',
   },
   commentContText: {
-    width:330,
     padding: 16,
     backgroundColor: 'rgba(0, 0, 0, 0.03)',
     borderRadius:6,

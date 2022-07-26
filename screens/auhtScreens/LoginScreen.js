@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authSignInUser } from "../../redux/auth/authOperations";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {
   StyleSheet,
   View,
@@ -12,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   KeyboardAvoidingView,
+  useWindowDimensions
 } from "react-native";
 
 const initialState = {
@@ -27,6 +27,8 @@ export default function LoginScreen({ navigation }) {
 
   const dispatch = useDispatch();
 
+  const screenHeight = useWindowDimensions().height;
+
   const handleSubmit = () => {
     // console.log("submit", state);
     dispatch(authSignInUser(state));
@@ -40,14 +42,13 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
-      {/* <KeyboardAwareScrollView> */}
         <View style={styles.container}>
           <ImageBackground
-            style={styles.image}
+            style={{...styles.image, height: (screenHeight + 120)}}
             source={require("../../assets/images/PhotoBG.jpg")}
           >
             <KeyboardAvoidingView>
-              <View style={{...styles.form,paddingBottom: isShowKeyboard ? 280 : 150}} >
+              <View style={{...styles.form,paddingBottom: isShowKeyboard ? 350 : 250}} >
                 <Text style={styles.title}>Увійти</Text>
                 <TextInput
                   style={{ ...styles.input, marginBottom: 16, borderColor: isInputStyleMail ? '#FF6C00' : '#E8E8E8' }}
@@ -90,7 +91,6 @@ export default function LoginScreen({ navigation }) {
             </KeyboardAvoidingView>
           </ImageBackground>
         </View>
-      {/* </KeyboardAwareScrollView> */}
     </TouchableWithoutFeedback>
   );
 };
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
     paddingTop: 32,
-    // marginBottom: 0,
   },
 
   title: {

@@ -2,8 +2,8 @@ import {useEffect,useState} from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { authSignOutUser } from "../../redux/auth/authOperations";
 
-import { View, Text, StyleSheet, ImageBackground, FlatList, Image, TouchableOpacity, ScrollView } from "react-native";
-import { Feather, Ionicons, FontAwesome } from "@expo/vector-icons";
+import { View, Text, StyleSheet, ImageBackground, FlatList, Image, TouchableOpacity, useWindowDimensions } from "react-native";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 
 import { collection, query, where, onSnapshot, doc, updateDoc,increment } from "firebase/firestore";
 import { db } from "../../firebase/config";
@@ -13,6 +13,9 @@ const ProfileScreen = ({ navigation }) => {
   // console.log('userPost', userPosts)
   
   const dispatch = useDispatch();
+
+  const screenHeight = useWindowDimensions().height;
+  console.log('screenHeight', screenHeight)
   
   const { userId, nickName, avatar } = useSelector((state) => state.auth);
 
@@ -47,9 +50,9 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.image}
+      <ImageBackground style={{ ...styles.image, minHeight: screenHeight }}
         source={require("../../assets/images/PhotoBG.jpg")}>
-        <View style={styles.form}>
+        <View style={{ ...styles.form, height: screenHeight - 40 }}>
           <View style={styles.avatarContainer}>
             <Image style={styles.avatarImg} source={{ uri: avatar }} />
             {/* <TouchableOpacity activeOpacity={0.9} style={styles.avatarBtn}>
@@ -94,7 +97,9 @@ const ProfileScreen = ({ navigation }) => {
                     style={styles.buttonList}
                     onPress={() => navigation.navigate("Карта", { locationCoords: item.locationCoords })}>
                     <Feather name="map-pin" size={18} color="#BDBDBD" />
-                    <Text style={styles.textListLocation}>{item.location.country}</Text>
+                    <Text style={styles.textListLocation}>
+                      {item.location.country}
+                    </Text>
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.textLiked}>Подобається: {item.liked}</Text>
@@ -117,7 +122,6 @@ const styles = StyleSheet.create({
   },
     image: {
     width: "100%",
-    minHeight: 680,
     backgroundPosition: "center",
     resizeMode: "cover",
   },
@@ -129,7 +133,6 @@ const styles = StyleSheet.create({
     paddingTop: 75,
     paddingBottom:100,
     paddingHorizontal: 16,
-    height: "100%",
   },
   button: {
     position: 'absolute',
